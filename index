@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>MagaBeauty</title>
+
+<meta
+name="theme-color"
+content="#A8C3B0">
+
+<link
+rel="manifest"
+href="manifest.json">
+
+<link
+rel="stylesheet"
+href="css/styles.css">
+
+<link
+rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link
+rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap"
+rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<header class="header">
+
+<h1 class="logo">
+MagaBeauty
+</h1>
+
+<p class="subtitle">
+Sua jornada para uma pele saudável e radiante
+</p>
+
+</header>
+
+<section class="card welcome-card">
+
+<h2>
+Bem-vinda 🌿
+</h2>
+
+<p>
+
+Pequenos hábitos consistentes geram grandes transformações.
+
+Seu plano de rejuvenescimento facial está organizado para que você acompanhe cada etapa da sua evolução.
+
+</p>
+
+</section>
+
+<section class="dashboard">
+
+<div class="dashboard-item">
+
+<span class="emoji">☀️</span>
+
+<h3>Manhã</h3>
+
+<p>Rotina diária</p>
+
+</div>
+
+<div class="dashboard-item">
+
+<span class="emoji">🌙</span>
+
+<h3>Noite</h3>
+
+<p>Tratamento</p>
+
+</div>
+
+<div class="dashboard-item">
+
+<span class="emoji">📅</span>
+
+<h3>Cronograma</h3>
+
+<p>Planejamento</p>
+
+</div>
+
+<div class="dashboard-item">
+
+<span class="emoji">📈</span>
+
+<h3>Progresso</h3>
+
+<p>Evolução</p>
+
+</div>
+
+</section>
+
+<section class="card">
+
+<h2>
+Rotina de Hoje
+</h2>
+
+<div class="routine-list">
+
+<label class="task">
+
+<input type="checkbox">
+
+<span>Lavar o rosto</span>
+
+</label>
+
+<label class="task">
+
+<input type="checkbox">
+
+<span>Vitamina C VC-10</span>
+
+</label>
+
+<label class="task">
+
+<input type="checkbox">
+
+<span>Melaclear</span>
+
+</label>
+
+<label class="task">
+
+<input type="checkbox">
+
+<span>GH-01</span>
+
+</label>
+
+<label class="task">
+
+<input type="checkbox">
+
+<span>Protetor Solar</span>
+
+</label>
+
+</div>
+
+</section>
+
+<section class="card">
+
+<h2>
+Ciência da Beleza 🧠
+</h2>
+
+<div class="science-grid">
+
+<div class="science-item">
+
+<h3>Colágeno</h3>
+
+<p>
+Após os 30 anos ocorre redução gradual da produção natural.
+</p>
+
+</div>
+
+<div class="science-item">
+
+<h3>Retinol</h3>
+
+<p>
+Estimula renovação celular e produção de colágeno.
+</p>
+
+</div>
+
+<div class="science-item">
+
+<h3>Protetor Solar</h3>
+
+<p>
+Principal aliado na prevenção do envelhecimento.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="card">
+
+<h2>
+Nutrição para a Pele 🥗
+</h2>
+
+<div class="food-grid">
+
+<div class="food-item">
+🍊 Vitamina C
+</div>
+
+<div class="food-item">
+🍅 Licopeno
+</div>
+
+<div class="food-item">
+🐟 Ômega 3
+</div>
+
+<div class="food-item">
+🍇 Polifenóis
+</div>
+
+</div>
+
+</section>
+
+<section class="card">
+
+<h2>
+Produtos da Rotina
+</h2>
+
+<div class="products-grid">
+
+<div class="product">
+
+<h3>RN-0,3</h3>
+
+<p>
+Retinol para estímulo de colágeno.
+</p>
+
+</div>
+
+<div class="product">
+
+<h3>VC-10</h3>
+
+<p>
+Vitamina C antioxidante.
+</p>
+
+</div>
+
+<div class="product">
+
+<h3>NI-10</h3>
+
+<p>
+Niacinamida para equilíbrio da pele.
+</p>
+
+</div>
+
+<div class="product">
+
+<h3>GH-01</h3>
+
+<p>
+Hidratação intensa.
+</p>
+
+</div>
+
+<div class="product">
+
+<h3>CM-01</h3>
+
+<p>
+Recuperação da barreira cutânea.
+</p>
+
+</div>
+
+<div class="product">
+
+<h3>Melaclear</h3>
+
+<p>
+Uniformização da pele.
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="card quote">
+
+<h2>
+
+"A consistência supera a perfeição."
+
+</h2>
+
+</section>
+
+</div>
+
+<nav class="bottom-nav">
+
+<a
+href="index.html"
+class="nav-item active">
+
+🏠
+<span>Início</span>
+
+</a>
+
+<a
+href="pages/produtos.html"
+class="nav-item">
+
+🧴
+<span>Produtos</span>
+
+</a>
+
+<a
+href="pages/nutricao.html"
+class="nav-item">
+
+🥗
+<span>Nutrição</span>
+
+</a>
+
+<a
+href="pages/biblioteca.html"
+class="nav-item">
+
+📚
+<span>Biblioteca</span>
+
+</a>
+
+<a
+href="pages/perfil.html"
+class="nav-item">
+
+👤
+<span>Perfil</span>
+
+</a>
+
+</nav>
+
+<script src="js/app.js"></script>
+
+</body>
+
+</html>
