@@ -1,0 +1,98 @@
+[
+  {
+    "id": "vc10",
+    "nome": "VC-10",
+    "subtitulo": "Sérum Antioxidante",
+    "periodo": "Manhã",
+    "funcao": "Vitamina C antioxidante.",
+    "beneficios": [
+      "Proteção antioxidante contra radicais livres",
+      "Luminosidade e uniformidade do tom",
+      "Estímulo da produção de colágeno"
+    ],
+    "comoUsar": "Aplicar pela manhã, em pele limpa e seca, antes do hidratante e do protetor solar.",
+    "icone": "sol"
+  },
+  {
+    "id": "melaclear",
+    "nome": "Melaclear",
+    "subtitulo": "Uniformizador de Tom",
+    "periodo": "Manhã",
+    "funcao": "Uniformização do tom da pele.",
+    "beneficios": [
+      "Redução visível de manchas",
+      "Luminosidade e viço"
+    ],
+    "comoUsar": "Aplicar pela manhã, após o VC-10, em toda a área do rosto.",
+    "icone": "sol"
+  },
+  {
+    "id": "gh01",
+    "nome": "GH-01",
+    "subtitulo": "Hidratante",
+    "periodo": "Ambos",
+    "funcao": "Hidratação.",
+    "beneficios": [
+      "Retenção hídrica prolongada",
+      "Viço e luminosidade saudável",
+      "Conforto cutâneo imediato"
+    ],
+    "comoUsar": "Aplicar manhã e noite, como última etapa antes do protetor solar (de dia) ou para selar a rotina (à noite).",
+    "icone": "gota"
+  },
+  {
+    "id": "rn03",
+    "nome": "RN-0,3",
+    "subtitulo": "Retinol 0,3%",
+    "periodo": "Noite",
+    "funcao": "Retinol.",
+    "beneficios": [
+      "Renovação celular acelerada",
+      "Redução de linhas finas",
+      "Estímulo da produção de colágeno"
+    ],
+    "comoUsar": "Aplicar exclusivamente à noite, em pele limpa e seca, nos dias do Modo Retinol do cronograma semanal.",
+    "icone": "lua"
+  },
+  {
+    "id": "ni10",
+    "nome": "NI-10",
+    "subtitulo": "Niacinamida 10%",
+    "periodo": "Noite",
+    "funcao": "Niacinamida.",
+    "beneficios": [
+      "Controle da oleosidade",
+      "Fortalecimento da barreira cutânea",
+      "Uniformização do tom da pele"
+    ],
+    "comoUsar": "Aplicar à noite, nos dias do Modo Recuperação, antes do CM-01.",
+    "icone": "lua"
+  },
+  {
+    "id": "cm01",
+    "nome": "CM-01",
+    "subtitulo": "Creme de Recuperação",
+    "periodo": "Noite",
+    "funcao": "Recuperação da barreira cutânea.",
+    "beneficios": [
+      "Reparação da barreira cutânea",
+      "Hidratação profunda e duradoura"
+    ],
+    "comoUsar": "Aplicar como última etapa da rotina noturna, todas as noites, em Modo Retinol ou Modo Recuperação.",
+    "icone": "lua"
+  },
+  {
+    "id": "protetor",
+    "nome": "Protetor Solar",
+    "subtitulo": "Proteção Diária",
+    "periodo": "Manhã",
+    "funcao": "Proteção contra radiação UV.",
+    "beneficios": [
+      "Prevenção do fotoenvelhecimento",
+      "Prevenção de rugas precoces",
+      "Prevenção do surgimento de manchas"
+    ],
+    "comoUsar": "Aplicar como última etapa da rotina matinal, diariamente, mesmo em dias nublados ou em ambientes fechados.",
+    "icone": "sol"
+  }
+]
