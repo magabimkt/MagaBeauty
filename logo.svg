@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Símbolo MagaBeauty">
+  <defs>
+    <linearGradient id="mbLeafGradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#A8C3B0"/>
+      <stop offset="100%" stop-color="#88A593"/>
+    </linearGradient>
+  </defs>
+  <!-- Folha vertical (vesica), símbolo de cuidado e renovação -->
+  <path d="M50 22
+           C 38 34, 28 48, 28 62
+           C 28 78, 38 90, 50 96
+           C 62 90, 72 78, 72 62
+           C 72 48, 62 34, 50 22 Z"
+        fill="url(#mbLeafGradient)"/>
+  <line x1="50" y1="30" x2="50" y2="86" stroke="#F5EBDD" stroke-width="1.6" stroke-linecap="round" opacity="0.65"/>
+  <circle cx="50" cy="14" r="5" fill="#E8D5D0"/>
+</svg>

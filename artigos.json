@@ -1,0 +1,102 @@
+[
+  {
+    "id": "retinol",
+    "titulo": "Retinol",
+    "resumo": "O ativo mais estudado para renovação celular e estímulo de colágeno.",
+    "conteudo": [
+      "O retinol é um derivado da vitamina A que atua acelerando a renovação das células da epiderme e estimulando os fibroblastos a produzirem mais colágeno.",
+      "Com o uso contínuo, a pele tende a apresentar textura mais uniforme, poros com aspecto reduzido e diminuição gradual de linhas finas.",
+      "Por aumentar a sensibilidade da pele à luz solar, seu uso é recomendado exclusivamente no período noturno, sempre seguido de proteção solar no dia seguinte."
+    ]
+  },
+  {
+    "id": "retinal",
+    "titulo": "Retinal",
+    "resumo": "Uma etapa intermediária do retinol, com ação mais rápida e potente.",
+    "conteudo": [
+      "O retinaldeído, ou retinal, é convertido em ácido retinoico em apenas uma etapa metabólica, contra duas etapas necessárias para o retinol.",
+      "Essa diferença faz com que o retinal tenha ação mais rápida, sendo uma alternativa para quem busca resultados mais evidentes na renovação celular.",
+      "Assim como o retinol, deve ser usado à noite e acompanhado de fotoproteção rigorosa durante o dia."
+    ]
+  },
+  {
+    "id": "peptideos",
+    "titulo": "Peptídeos",
+    "resumo": "Pequenas cadeias de aminoácidos que sinalizam a pele a se regenerar.",
+    "conteudo": [
+      "Peptídeos são fragmentos de proteínas que atuam como mensageiros, sinalizando às células da pele para produzir mais colágeno e elastina.",
+      "Diferente do retinol, costumam ser mais bem tolerados por peles sensíveis, podendo ser incorporados tanto na rotina diurna quanto na noturna.",
+      "São frequentemente combinados a outros ativos para potencializar firmeza e elasticidade ao longo do tempo."
+    ]
+  },
+  {
+    "id": "colageno",
+    "titulo": "Colágeno",
+    "resumo": "A proteína estrutural responsável pela firmeza da pele.",
+    "conteudo": [
+      "O colágeno é a proteína mais abundante da derme, responsável por sustentar a estrutura e a firmeza da pele.",
+      "Sua produção natural começa a diminuir gradualmente após os 30 anos, processo que pode ser acelerado por hábitos como exposição solar excessiva, tabagismo e alimentação rica em açúcar.",
+      "Ativos como retinol, vitamina C e peptídeos, aliados a uma alimentação rica em proteínas e antioxidantes, ajudam a estimular sua produção."
+    ]
+  },
+  {
+    "id": "elastina",
+    "titulo": "Elastina",
+    "resumo": "A proteína que devolve a pele à sua forma original.",
+    "conteudo": [
+      "A elastina é a proteína responsável pela capacidade da pele de esticar e retornar à sua forma original, conferindo elasticidade.",
+      "Assim como o colágeno, sua produção e qualidade diminuem com o tempo, especialmente sob exposição solar intensa e contínua.",
+      "Manter a barreira cutânea hidratada e protegida da radiação UV é uma das formas mais eficazes de preservar a elastina existente."
+    ]
+  },
+  {
+    "id": "protetorsolar",
+    "titulo": "Protetor Solar",
+    "resumo": "O passo mais importante para prevenir o envelhecimento precoce.",
+    "conteudo": [
+      "A radiação ultravioleta é responsável pela maior parte do envelhecimento precoce da pele, processo conhecido como fotoenvelhecimento.",
+      "A exposição contínua sem proteção acelera o surgimento de rugas, perda de firmeza e manchas decorrentes do excesso de melanina.",
+      "Usar protetor solar diariamente, mesmo em dias nublados ou em ambientes internos, é considerado o hábito isolado mais eficaz para preservar a saúde e a juventude da pele."
+    ]
+  },
+  {
+    "id": "radicaislivres",
+    "titulo": "Radicais Livres",
+    "resumo": "Moléculas instáveis que aceleram o envelhecimento celular.",
+    "conteudo": [
+      "Radicais livres são moléculas instáveis geradas naturalmente pelo metabolismo e potencializadas por fatores externos como poluição e radiação solar.",
+      "Por serem instáveis, danificam estruturas celulares, incluindo as fibras de colágeno e elastina, acelerando o envelhecimento da pele.",
+      "Antioxidantes como a vitamina C neutralizam essas moléculas, ajudando a reduzir o impacto cumulativo desse processo."
+    ]
+  },
+  {
+    "id": "glicacao",
+    "titulo": "Glicação",
+    "resumo": "Como o excesso de açúcar prejudica colágeno e elastina.",
+    "conteudo": [
+      "A glicação é o processo no qual moléculas de açúcar em excesso se ligam às fibras de colágeno e elastina, tornando-as rígidas e quebradiças.",
+      "Esse processo compromete a flexibilidade da pele e está associado à perda de firmeza e ao surgimento de rugas mais profundas.",
+      "Reduzir o consumo de açúcar refinado e ultraprocessados é uma medida que contribui para preservar a qualidade do colágeno ao longo dos anos."
+    ]
+  },
+  {
+    "id": "envelhecimentofacial",
+    "titulo": "Envelhecimento Facial",
+    "resumo": "Os fatores internos e externos que moldam o envelhecimento da pele.",
+    "conteudo": [
+      "O envelhecimento facial resulta da combinação entre fatores intrínsecos, como a genética e a queda hormonal, e fatores extrínsecos, como sol, poluição e hábitos de vida.",
+      "Enquanto o envelhecimento intrínseco é gradual e previsível, o extrínseco pode ser amplamente retardado por meio de cuidados consistentes.",
+      "Uma rotina com proteção solar diária, ativos estimulantes de colágeno e boa hidratação é a estratégia mais eficaz para retardar seus sinais visíveis."
+    ]
+  },
+  {
+    "id": "nutricaopele",
+    "titulo": "Nutrição e Pele",
+    "resumo": "Como a alimentação influencia diretamente a saúde da pele.",
+    "conteudo": [
+      "A pele reflete, em grande parte, os nutrientes disponíveis no organismo, sendo diretamente influenciada pela qualidade da alimentação.",
+      "Vitamina C, licopeno, ômega 3, polifenóis e proteínas fornecem os blocos de construção e a proteção antioxidante necessários para a renovação celular.",
+      "Uma alimentação equilibrada potencializa os resultados da rotina de skincare, atuando de dentro para fora."
+    ]
+  }
+]
