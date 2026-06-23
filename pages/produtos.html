@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Produtos — MagaBeauty</title>
+  <title>Minha Bancada — MagaBeauty</title>
   <link rel="manifest" href="../manifest.json">
   <meta name="theme-color" content="#A8C3B0">
   <link rel="apple-touch-icon" href="../assets/icon-192.png">
@@ -26,10 +26,10 @@
 
 <main>
   <div class="page-header">
-    <div class="page-header__eyebrow">Sua rotina</div>
-    <h1 class="page-header__title">Produtos</h1>
+    <div class="page-header__eyebrow">Seus produtos</div>
+    <h1 class="page-header__title">Minha Bancada</h1>
     <p class="page-header__sub">
-      Adicione, edite ou remova os produtos da sua rotina.
+      Adicione, edite ou remova produtos sem alterar código.
       O checklist do dashboard é atualizado automaticamente.
     </p>
   </div>
@@ -116,12 +116,67 @@
       </div>
 
       <div class="form-group">
-        <label class="form-label" for="field-periodo">Período na rotina</label>
-        <select class="form-select" id="field-periodo" name="periodo">
+        <label class="form-label" for="field-horario">Horário de uso</label>
+        <select class="form-select" id="field-horario" name="horario">
           <option value="manha">☀️ Manhã</option>
           <option value="noite">🌙 Noite</option>
           <option value="ambos">🌗 Manhã e Noite</option>
         </select>
+      </div>
+
+      <div class="form-group">
+        <span class="form-label">Dias da semana</span>
+        <p style="font-size:11.5px;color:var(--ink-xlight);margin-bottom:10px">
+          Sem seleção = aparece todos os dias
+        </p>
+        <div class="dias-semana">
+          <label class="dias-semana__item">
+            <span class="dias-semana__label">Dom</span>
+            <input class="dias-semana__input" type="checkbox" name="dia-0" value="0">
+            <span class="dias-semana__check" aria-hidden="true"></span>
+          </label>
+          <label class="dias-semana__item">
+            <span class="dias-semana__label">Seg</span>
+            <input class="dias-semana__input" type="checkbox" name="dia-1" value="1">
+            <span class="dias-semana__check" aria-hidden="true"></span>
+          </label>
+          <label class="dias-semana__item">
+            <span class="dias-semana__label">Ter</span>
+            <input class="dias-semana__input" type="checkbox" name="dia-2" value="2">
+            <span class="dias-semana__check" aria-hidden="true"></span>
+          </label>
+          <label class="dias-semana__item">
+            <span class="dias-semana__label">Qua</span>
+            <input class="dias-semana__input" type="checkbox" name="dia-3" value="3">
+            <span class="dias-semana__check" aria-hidden="true"></span>
+          </label>
+          <label class="dias-semana__item">
+            <span class="dias-semana__label">Qui</span>
+            <input class="dias-semana__input" type="checkbox" name="dia-4" value="4">
+            <span class="dias-semana__check" aria-hidden="true"></span>
+          </label>
+          <label class="dias-semana__item">
+            <span class="dias-semana__label">Sex</span>
+            <input class="dias-semana__input" type="checkbox" name="dia-5" value="5">
+            <span class="dias-semana__check" aria-hidden="true"></span>
+          </label>
+          <label class="dias-semana__item">
+            <span class="dias-semana__label">Sáb</span>
+            <input class="dias-semana__input" type="checkbox" name="dia-6" value="6">
+            <span class="dias-semana__check" aria-hidden="true"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label form-label--optional" for="field-observacoes">Observações</label>
+        <textarea
+          class="form-textarea"
+          id="field-observacoes"
+          name="observacoes"
+          placeholder="Ex: Usar apenas 1 gota; evitar contato com os olhos; aguardar absorção antes do próximo passo…"
+          rows="2"
+        ></textarea>
       </div>
 
     </div><!-- /productForm -->
@@ -168,7 +223,7 @@
       <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/>
       <line x1="7" y1="7" x2="7.01" y2="7"/>
     </svg>
-    <span>Produtos</span>
+    <span>Bancada</span>
   </a>
   <a href="diario.html" data-nav="diario">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
