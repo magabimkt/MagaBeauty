@@ -3,7 +3,7 @@
    Cache do app shell para funcionamento offline.
    ========================================================================== */
 
-const CACHE_VERSION = 'magabeauty-v1';
+const CACHE_VERSION = 'magabeauty-v2';
 
 const APP_SHELL = [
   './',
@@ -12,6 +12,7 @@ const APP_SHELL = [
   './css/styles.css',
   './js/app.js',
   './pages/produtos.html',
+  './pages/minha-rotina.html',
   './pages/nutricao.html',
   './pages/biblioteca.html',
   './pages/perfil.html',
