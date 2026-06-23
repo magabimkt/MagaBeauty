@@ -1,21 +1,16 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>MagaBeauty — Sua jornada para uma pele saudável</title>
-<meta name="description" content="Guia completo de skincare baseado em evidências: rotina, ciência da beleza e nutrição para a pele.">
-<meta name="theme-color" content="#A8C3B0">
-<link rel="manifest" href="manifest.json">
-<link rel="icon" href="assets/icon-192.png">
-<link rel="apple-touch-icon" href="assets/icon-192.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="MagaBeauty">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>MagaBeauty</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#A8C3B0">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body data-page="dashboard" data-base="" data-register-sw="true">
 
@@ -31,117 +26,130 @@
 
 <main>
 
+  <!-- Ritual Ring Card -->
   <div class="card card--sage">
     <div class="ritual-ring-wrap">
-      <div class="ritual-ring">
-        <svg viewBox="0 0 104 104" width="104" height="104">
-          <circle class="ring-track" cx="52" cy="52" r="44"></circle>
-          <circle class="ring-progress" cx="52" cy="52" r="44"></circle>
-        </svg>
-        <div class="ritual-ring__center">
-          <span class="ritual-ring__pct">0%</span>
-          <span class="ritual-ring__label">Hoje</span>
+      <svg class="ritual-ring" viewBox="0 0 120 120" aria-hidden="true">
+        <circle class="ritual-ring__track" cx="60" cy="60" r="50"/>
+        <circle class="ritual-ring__fill" id="ringFill" cx="60" cy="60" r="50"/>
+      </svg>
+      <div class="ritual-ring__label">
+        <span class="ritual-ring__pct" id="ringPct">0%</span>
+        <span class="ritual-ring__sub">HOJE</span>
+      </div>
+    </div>
+    <div class="ritual-stats">
+      <div class="ritual-stat">
+        <span class="ritual-stat__icon" aria-hidden="true">🔥</span>
+        <div>
+          <div class="ritual-stat__val" id="streakVal">0 dias</div>
+          <div class="ritual-stat__lbl">Consecutivos</div>
         </div>
       </div>
-      <div class="streak-stats">
-        <div class="streak-stat">
-          <span class="streak-stat__icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c1 3-2 4-2 7a3 3 0 0 0 6 0c2 2 2 5 0 8a7 7 0 0 1-9-11c.5 1 1.5 1.5 2 1.5C9 5 10 3 12 2z"/></svg>
-          </span>
-          <div>
-            <div class="streak-stat__value"><span id="streak-value">0</span> dias</div>
-            <div class="streak-stat__label">Consecutivos</div>
-          </div>
-        </div>
-        <div class="streak-stat">
-          <span class="streak-stat__icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.5A9 9 0 1 1 11.5 3 7 7 0 0 0 21 12.5z"/></svg>
-          </span>
-          <div>
-            <div class="streak-stat__value"><span id="retinol-value">0</span>×</div>
-            <div class="streak-stat__label">Aplicações de retinol</div>
-          </div>
+      <div class="ritual-stat">
+        <span class="ritual-stat__icon" aria-hidden="true">🌙</span>
+        <div>
+          <div class="ritual-stat__val" id="retinolVal">0×</div>
+          <div class="ritual-stat__lbl">Aplicações de retinol</div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="section-title">
-    <h2>Rotina de hoje</h2>
-  </div>
-  <div class="card">
-    <span class="mode-badge" id="mode-badge">—</span>
-    <div class="routine-tabs" role="tablist">
-      <button class="routine-tab" data-tab="manha" role="tab" aria-selected="true">☀️ Manhã</button>
-      <button class="routine-tab" data-tab="noite" role="tab" aria-selected="false">🌙 Noite</button>
+  <!-- Rotina de hoje -->
+  <section class="section">
+    <h2 class="section__title">Rotina de hoje</h2>
+    <div class="card">
+      <div class="mode-badge" id="modeBadge">Carregando…</div>
+      <div class="tab-bar" role="tablist">
+        <button class="tab tab--active" id="tabManha" data-tab="manha" role="tab" aria-selected="true">☀️ Manhã</button>
+        <button class="tab" id="tabNoite" data-tab="noite" role="tab" aria-selected="false">🌙 Noite</button>
+      </div>
+      <ul class="checklist" id="checklist" role="list"></ul>
+      <p class="checklist-empty" id="checklistEmpty" hidden>
+        Nenhum produto cadastrado para este período.<br>
+        <a href="pages/produtos.html">Adicionar produtos →</a>
+      </p>
     </div>
-    <ul class="checklist" id="routine-list"></ul>
-  </div>
+  </section>
 
-  <div class="section-title">
-    <h2>Cronograma semanal</h2>
-  </div>
-  <div class="card">
-    <div class="week-grid" id="week-grid"></div>
-  </div>
+  <!-- Cronograma semanal -->
+  <section class="section">
+    <h2 class="section__title">Cronograma semanal</h2>
+    <div class="card">
+      <div class="week-grid" id="weekGrid"></div>
+    </div>
+  </section>
 
-  <div class="section-title">
-    <h2>Ciência da beleza</h2>
-    <a class="section-link" href="pages/biblioteca.html">Ver biblioteca →</a>
-  </div>
-  <div class="science-grid">
-    <a class="science-card" href="pages/biblioteca.html#artigo-colageno">
-      <h3>Colágeno</h3>
-      <p>A proteína que sustenta a firmeza da pele.</p>
-    </a>
-    <a class="science-card" href="pages/biblioteca.html#artigo-elastina">
-      <h3>Elastina</h3>
-      <p>Responsável pela elasticidade e flexibilidade.</p>
-    </a>
-    <a class="science-card" href="pages/biblioteca.html#artigo-retinol">
-      <h3>Retinol</h3>
-      <p>Renovação celular e estímulo de colágeno.</p>
-    </a>
-    <a class="science-card" href="pages/biblioteca.html#artigo-protetorsolar">
-      <h3>Protetor Solar</h3>
-      <p>O hábito mais eficaz contra o fotoenvelhecimento.</p>
-    </a>
-    <a class="science-card" href="pages/biblioteca.html#artigo-radicaislivres">
-      <h3>Radicais Livres</h3>
-      <p>Moléculas que aceleram o envelhecimento.</p>
-    </a>
-    <a class="science-card" href="pages/biblioteca.html#artigo-glicacao">
-      <h3>Glicação</h3>
-      <p>Como o açúcar em excesso prejudica a pele.</p>
-    </a>
-  </div>
+  <!-- Acesso rápido -->
+  <section class="section">
+    <h2 class="section__title">Acesso rápido</h2>
+    <div class="quick-grid">
+      <a href="pages/diario.html" class="quick-card">
+        <div class="quick-card__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+          </svg>
+        </div>
+        <div class="quick-card__label">Diário da Pele</div>
+        <div class="quick-card__sub">Registre como sua pele está hoje</div>
+      </a>
+      <a href="pages/biblioteca.html" class="quick-card">
+        <div class="quick-card__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
+          </svg>
+        </div>
+        <div class="quick-card__label">Biblioteca de Dicas</div>
+        <div class="quick-card__sub">Skincare, sono, hábitos e mais</div>
+      </a>
+    </div>
+  </section>
 
 </main>
 
-<nav class="bottom-nav">
-  <a href="index.html" data-nav="index">
-    <svg viewBox="0 0 24 24"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9h12v-9"/></svg>
-    Início
+<!-- Bottom Nav -->
+<nav class="bottom-nav" aria-label="Navegação principal">
+  <a href="index.html" class="is-active" data-nav="dashboard" aria-current="page">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+    <span>Início</span>
   </a>
   <a href="pages/produtos.html" data-nav="produtos">
-    <svg viewBox="0 0 24 24"><path d="M9 3h6v3.2c0 .5.2 1 .6 1.3l2 1.9c.5.4.8 1.1.8 1.8V19a2 2 0 0 1-2 2H8.6a2 2 0 0 1-2-2V11.2c0-.7.3-1.4.8-1.8l2-1.9c.4-.4.6-.8.6-1.3V3Z"/><path d="M8 14h8"/></svg>
-    Produtos
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/>
+      <line x1="7" y1="7" x2="7.01" y2="7"/>
+    </svg>
+    <span>Produtos</span>
   </a>
-  <a href="pages/minha-rotina.html" data-nav="minha-rotina">
-    <svg viewBox="0 0 24 24"><path d="M7 4h10"/><path d="M8 8h8"/><path d="M6 12h12"/><path d="M8 16h8"/><path d="M10 20h4"/></svg>
-    Rotina
-  </a>
-  <a href="pages/nutricao.html" data-nav="nutricao">
-    <svg viewBox="0 0 24 24"><path d="M12 21c-4.5-1-8-5-8-9.5C4 7 6.5 4 9.5 4c1.2 0 2 .5 2.5 1 .5-.5 1.3-1 2.5-1 3 0 5.5 3 5.5 7.5 0 4.5-3.5 8.5-8 9.5Z"/></svg>
-    Nutrição
+  <a href="pages/diario.html" data-nav="diario">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+      <polyline points="14 2 14 8 20 8"/>
+      <line x1="16" y1="13" x2="8" y2="13"/>
+      <line x1="16" y1="17" x2="8" y2="17"/>
+    </svg>
+    <span>Diário</span>
   </a>
   <a href="pages/biblioteca.html" data-nav="biblioteca">
-    <svg viewBox="0 0 24 24"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5Z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5Z"/></svg>
-    Biblioteca
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
+      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
+    </svg>
+    <span>Biblioteca</span>
   </a>
   <a href="pages/perfil.html" data-nav="perfil">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c1.2-3.5 4-5.2 7-5.2s5.8 1.7 7 5.2"/></svg>
-    Perfil
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+      <circle cx="12" cy="7" r="4"/>
+    </svg>
+    <span>Perfil</span>
   </a>
 </nav>
 
