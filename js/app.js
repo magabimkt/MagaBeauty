@@ -1,416 +1,943 @@
-/* ==========================================================================
+/* ============================================================
    MagaBeauty — app.js
-   Estado local (LocalStorage), navegação e renderização por página.
-   Sem backend, sem autenticação, 100% client-side.
-   ========================================================================== */
-
+   Toda a lógica da aplicação (roteamento, estado, CRUD).
+   ============================================================ */
 (function () {
   'use strict';
 
-  /* ---------- Helpers genéricos ---------- */
-  const $ = (sel, ctx) => (ctx || document).querySelector(sel);
-  const $$ = (sel, ctx) => Array.from((ctx || document).querySelectorAll(sel));
-  const base = document.body.dataset.base || '';
+  /* ── Constantes ─────────────────────────────────────────── */
 
-  function pad(n) { return n < 10 ? '0' + n : '' + n; }
-  function dateStr(d) { return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; }
-  function todayStr() { return dateStr(new Date()); }
-
-  const WEEKDAY_NAMES = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-  // Cronograma semanal fixo: 0=Domingo ... 6=Sábado
+  // Dia da semana 0=Dom … 6=Sáb → modo da rotina noturna
   const WEEKLY_MODE = {
     0: 'recuperacao', // Domingo
     1: 'retinol',     // Segunda
     2: 'recuperacao', // Terça
     3: 'retinol',     // Quarta
     4: 'recuperacao', // Quinta
-    5: 'retinol',      // Sexta
-    6: 'recuperacao'  // Sábado
+    5: 'retinol',     // Sexta
+    6: 'recuperacao', // Sábado
   };
 
-  function modeForDate(d) { return WEEKLY_MODE[d.getDay()]; }
-  function modeLabel(mode) { return mode === 'retinol' ? 'Modo Retinol' : 'Modo Recuperação'; }
-
-  const MANHA_ITEMS = [
-    { id: 'lavar', label: 'Lavar o rosto' },
-    { id: 'vc10', label: 'VC-10' },
-    { id: 'melaclear', label: 'Melaclear' },
-    { id: 'gh01', label: 'GH-01' },
-    { id: 'protetor', label: 'Protetor Solar' }
+  // Produtos padrão carregados no primeiro acesso
+  const DEFAULT_PRODUCTS = [
+    {
+      id: 'prod-vc10',
+      categoria: 'Vitamina C',
+      marca: 'Skinceuticals',
+      nome: 'VC-10',
+      periodo: 'manha',
+      descricao: 'Sérum antioxidante com ácido ascórbico a 10%. Aplique sobre a pele limpa e seca antes do hidratante.',
+    },
+    {
+      id: 'prod-melaclear',
+      categoria: 'Despigmentante',
+      marca: 'Adcos',
+      nome: 'Melaclear',
+      periodo: 'manha',
+      descricao: 'Uniformizador de tom com agentes clareadores. Ideal para manchas superficiais.',
+    },
+    {
+      id: 'prod-gh01',
+      categoria: 'Hidratante',
+      marca: 'Adcos',
+      nome: 'GH-01',
+      periodo: 'ambos',
+      descricao: 'Hidratante facial com textura leve, adequado para uso manhã e noite.',
+    },
+    {
+      id: 'prod-rn03',
+      categoria: 'Retinol',
+      marca: 'Principia',
+      nome: 'RN-0,3',
+      periodo: 'noite',
+      descricao: 'Retinol 0,3% para renovação celular. Usar apenas nas noites do cronograma retinol.',
+    },
+    {
+      id: 'prod-ni10',
+      categoria: 'Niacinamida',
+      marca: 'Adcos',
+      nome: 'NI-10',
+      periodo: 'noite',
+      descricao: 'Niacinamida 10% para controle de oleosidade e uniformização do tom.',
+    },
+    {
+      id: 'prod-cm01',
+      categoria: 'Regenerador',
+      marca: 'Adcos',
+      nome: 'CM-01',
+      periodo: 'noite',
+      descricao: 'Creme regenerador noturno. Usar como último passo da rotina de noite.',
+    },
+    {
+      id: 'prod-fps',
+      categoria: 'Proteção Solar',
+      marca: '',
+      nome: 'Protetor Solar',
+      periodo: 'manha',
+      descricao: 'FPS 30 ou superior. Último passo obrigatório da rotina da manhã.',
+    },
   ];
 
-  const NOITE_ITEMS = {
-    retinol: [
-      { id: 'limpeza', label: 'Limpeza' },
-      { id: 'rn03', label: 'RN-0,3' },
-      { id: 'cm01', label: 'CM-01' }
-    ],
-    recuperacao: [
-      { id: 'limpeza', label: 'Limpeza' },
-      { id: 'ni10', label: 'NI-10' },
-      { id: 'gh01', label: 'GH-01' },
-      { id: 'cm01', label: 'CM-01' }
-    ]
-  };
+  /* ── Chaves do localStorage ──────────────────────────────── */
+  const KEY_ROUTINE  = date => `mb_routine_${date}`;
+  const KEY_META     = 'mb_meta';
+  const KEY_PRODUCTS = 'mb_products';
+  const KEY_DIARY    = 'mb_diary';
 
-  /* ---------- Estado / LocalStorage ---------- */
-  const ROUTINE_PREFIX = 'mb_routine_';
-  const META_KEY = 'mb_meta';
+  /* ── Helpers de data ─────────────────────────────────────── */
+
+  /**
+   * Retorna a data do "dia de skincare" atual.
+   * O dia começa às 05:00. Horários entre 00:00–04:59 pertencem ao dia anterior.
+   */
+  function getSkinDate() {
+    const now = new Date();
+    if (now.getHours() < 5) {
+      const prev = new Date(now);
+      prev.setDate(prev.getDate() - 1);
+      return prev.toISOString().split('T')[0];
+    }
+    return now.toISOString().split('T')[0];
+  }
+
+  /** Dia da semana (0–6) para uma string YYYY-MM-DD. */
+  function getWeekDay(dateStr) {
+    const [y, m, d] = dateStr.split('-').map(Number);
+    return new Date(y, m - 1, d).getDay();
+  }
+
+  /** Modo da rotina ('retinol' | 'recuperacao') para uma data. */
+  function getModeForDate(dateStr) {
+    return WEEKLY_MODE[getWeekDay(dateStr)];
+  }
+
+  /** Formata YYYY-MM-DD para DD/MM/AAAA. */
+  function formatDateBR(dateStr) {
+    if (!dateStr) return '';
+    const [y, m, d] = dateStr.split('-');
+    return `${d}/${m}/${y}`;
+  }
+
+  /** Retorna a data do dia anterior em formato YYYY-MM-DD. */
+  function getPrevDate(dateStr) {
+    const [y, m, d] = dateStr.split('-').map(Number);
+    const dt = new Date(y, m - 1, d);
+    dt.setDate(dt.getDate() - 1);
+    return dt.toISOString().split('T')[0];
+  }
+
+  /* ── Produtos ────────────────────────────────────────────── */
+
+  function getProducts() {
+    try {
+      const raw = localStorage.getItem(KEY_PRODUCTS);
+      if (raw) return JSON.parse(raw);
+    } catch (e) { /* continua */ }
+    // Primeiro acesso: semeia os produtos padrão
+    saveProducts(DEFAULT_PRODUCTS);
+    return DEFAULT_PRODUCTS;
+  }
+
+  function saveProducts(products) {
+    localStorage.setItem(KEY_PRODUCTS, JSON.stringify(products));
+  }
+
+  function generateId() {
+    return 'prod-' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  }
+
+  /* ── Estado da rotina diária ─────────────────────────────── */
+
+  function getDay(date) {
+    try {
+      const raw = localStorage.getItem(KEY_ROUTINE(date));
+      return raw ? JSON.parse(raw) : { manha: {}, noite: {} };
+    } catch (e) {
+      return { manha: {}, noite: {} };
+    }
+  }
+
+  function saveDay(date, state) {
+    localStorage.setItem(KEY_ROUTINE(date), JSON.stringify(state));
+    // Registra a primeira data de uso para o cálculo de adesão
+    const meta = getMeta();
+    if (!meta.firstDate || date < meta.firstDate) {
+      meta.firstDate = date;
+      saveMeta(meta);
+    }
+  }
 
   function getMeta() {
-    try { return JSON.parse(localStorage.getItem(META_KEY)) || {}; }
-    catch (e) { return {}; }
-  }
-  function saveMeta(meta) { localStorage.setItem(META_KEY, JSON.stringify(meta)); }
-  function ensureFirstDate() {
-    const meta = getMeta();
-    if (!meta.firstDate) { meta.firstDate = todayStr(); saveMeta(meta); }
-  }
-
-  function emptyDay(dStrKey) {
-    const d = new Date(dStrKey + 'T00:00:00');
-    const mode = modeForDate(d);
-    return { date: dStrKey, mode: mode, manha: {}, noite: {} };
-  }
-
-  function getDay(dStrKey) {
     try {
-      const raw = localStorage.getItem(ROUTINE_PREFIX + dStrKey);
-      if (!raw) return emptyDay(dStrKey);
-      const parsed = JSON.parse(raw);
-      return Object.assign(emptyDay(dStrKey), parsed);
-    } catch (e) { return emptyDay(dStrKey); }
+      return JSON.parse(localStorage.getItem(KEY_META)) || {};
+    } catch (e) {
+      return {};
+    }
   }
 
-  function saveDay(day) {
-    localStorage.setItem(ROUTINE_PREFIX + day.date, JSON.stringify(day));
-    ensureFirstDate();
+  function saveMeta(m) {
+    localStorage.setItem(KEY_META, JSON.stringify(m));
   }
 
-  function toggleItem(dStrKey, period, itemId) {
-    const day = getDay(dStrKey);
-    day[period][itemId] = !day[period][itemId];
-    saveDay(day);
-    return day;
+  /**
+   * Retorna os itens do checklist para um período e modo.
+   * "Lavar o rosto" é sempre o primeiro item.
+   * Produtos com categoria "Retinol" só aparecem no modo retinol.
+   */
+  function getChecklistItems(period, mode) {
+    const products = getProducts();
+    const items = [{ id: 'lavar-rosto', label: 'Lavar o rosto', tag: null }];
+
+    products.forEach(p => {
+      const pertenceManha = period === 'manha' && (p.periodo === 'manha' || p.periodo === 'ambos');
+      const pertenceNoite = period === 'noite' && (p.periodo === 'noite' || p.periodo === 'ambos');
+
+      if (pertenceManha) {
+        items.push({ id: p.id, label: p.nome, tag: p.categoria });
+        return;
+      }
+      if (pertenceNoite) {
+        // Retinol só aparece nas noites de retinol
+        if (p.categoria === 'Retinol') {
+          if (mode === 'retinol') items.push({ id: p.id, label: p.nome, tag: p.categoria });
+        } else {
+          items.push({ id: p.id, label: p.nome, tag: p.categoria });
+        }
+      }
+    });
+
+    return items;
   }
 
-  function isDayComplete(dStrKey) {
-    const day = getDay(dStrKey);
-    const manhaDone = MANHA_ITEMS.every(it => day.manha[it.id]);
-    const noiteItems = NOITE_ITEMS[day.mode];
-    const noiteDone = noiteItems.every(it => day.noite[it.id]);
-    return manhaDone && noiteDone;
+  /* ── Métricas ────────────────────────────────────────────── */
+
+  function isDayComplete(date, mode) {
+    const state = getDay(date);
+    const allItems = [
+      ...getChecklistItems('manha', mode),
+      ...getChecklistItems('noite', mode),
+    ];
+    if (!allItems.length) return false;
+    return allItems.every(item => state.manha[item.id] || state.noite[item.id]);
   }
 
-  function dayProgress(dStrKey) {
-    const day = getDay(dStrKey);
-    const noiteItems = NOITE_ITEMS[day.mode];
-    const total = MANHA_ITEMS.length + noiteItems.length;
-    let done = 0;
-    MANHA_ITEMS.forEach(it => { if (day.manha[it.id]) done++; });
-    noiteItems.forEach(it => { if (day.noite[it.id]) done++; });
-    return total ? Math.round((done / total) * 100) : 0;
+  function dayProgress(date, period, mode) {
+    const state = getDay(date);
+    const items = getChecklistItems(period, mode);
+    if (!items.length) return 0;
+    const done = items.filter(i => state[period][i.id]).length;
+    return done / items.length;
   }
 
   function allStoredDates() {
-    const out = [];
+    const dates = [];
     for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key && key.indexOf(ROUTINE_PREFIX) === 0) out.push(key.slice(ROUTINE_PREFIX.length));
+      const k = localStorage.key(i);
+      if (k && k.startsWith('mb_routine_')) {
+        dates.push(k.replace('mb_routine_', ''));
+      }
     }
-    return out.sort();
+    return dates.sort();
   }
 
   function computeStreak() {
+    const today = getSkinDate();
+    const todayMode = getModeForDate(today);
     let streak = 0;
-    const d = new Date();
-    if (isDayComplete(dateStr(d))) { streak++; }
-    d.setDate(d.getDate() - 1);
-    while (isDayComplete(dateStr(d))) { streak++; d.setDate(d.getDate() - 1); }
+    // Se hoje já estiver completo, começa contando de hoje; senão de ontem
+    let d = isDayComplete(today, todayMode) ? today : getPrevDate(today);
+    for (let i = 0; i < 365; i++) {
+      const mode = getModeForDate(d);
+      if (isDayComplete(d, mode)) {
+        streak++;
+        d = getPrevDate(d);
+      } else {
+        break;
+      }
+    }
     return streak;
   }
 
   function countRetinolApplications() {
-    return allStoredDates().reduce((acc, dStrKey) => {
-      const day = getDay(dStrKey);
-      return acc + (day.noite.rn03 ? 1 : 0);
-    }, 0);
+    return allStoredDates().filter(date => {
+      if (getModeForDate(date) !== 'retinol') return false;
+      const state = getDay(date);
+      return getChecklistItems('noite', 'retinol').some(i => state.noite[i.id]);
+    }).length;
   }
 
   function countCompletedChecklists() {
-    return allStoredDates().reduce((acc, dStrKey) => acc + (isDayComplete(dStrKey) ? 1 : 0), 0);
+    return allStoredDates().filter(date => {
+      const mode = getModeForDate(date);
+      return isDayComplete(date, mode);
+    }).length;
   }
 
   function computeAdesao() {
     const meta = getMeta();
     if (!meta.firstDate) return 0;
-    const start = new Date(meta.firstDate + 'T00:00:00');
-    const today = new Date();
-    const msPerDay = 86400000;
-    const daysSince = Math.max(1, Math.round((new Date(dateStr(today) + 'T00:00:00') - start) / msPerDay) + 1);
-    const completed = countCompletedChecklists();
-    return Math.min(100, Math.round((completed / daysSince) * 100));
+    const today = getSkinDate();
+    const [fy, fm, fd] = meta.firstDate.split('-').map(Number);
+    const [ty, tm, td] = today.split('-').map(Number);
+    const first = new Date(fy, fm - 1, fd);
+    const last  = new Date(ty, tm - 1, td);
+    const totalDays = Math.round((last - first) / 86400000) + 1;
+    if (totalDays <= 0) return 0;
+    return Math.min(100, Math.round((countCompletedChecklists() / totalDays) * 100));
   }
 
-  /* ---------- UI utilitários ---------- */
-  function showToast(msg) {
-    let toast = $('.toast');
-    if (!toast) {
-      toast = document.createElement('div');
-      toast.className = 'toast';
-      document.body.appendChild(toast);
+  /* ── Diário da Pele ──────────────────────────────────────── */
+
+  function getDiaryEntries() {
+    try {
+      return JSON.parse(localStorage.getItem(KEY_DIARY)) || [];
+    } catch (e) {
+      return [];
     }
-    toast.textContent = msg;
-    toast.classList.add('is-visible');
-    clearTimeout(toast._t);
-    toast._t = setTimeout(() => toast.classList.remove('is-visible'), 1800);
   }
 
-  function setRing(el, percent) {
-    const circle = el.querySelector('.ring-progress');
-    if (!circle) return;
-    const r = circle.r.baseVal.value;
-    const c = 2 * Math.PI * r;
-    circle.style.strokeDasharray = `${c} ${c}`;
-    circle.style.strokeDashoffset = c - (Math.max(0, Math.min(100, percent)) / 100) * c;
-    const pctLabel = el.querySelector('.ritual-ring__pct');
-    if (pctLabel) pctLabel.textContent = `${percent}%`;
+  function saveDiaryEntries(entries) {
+    localStorage.setItem(KEY_DIARY, JSON.stringify(entries));
   }
 
-  function highlightNav() {
-    const path = location.pathname.split('/').pop() || 'index.html';
-    $$('.bottom-nav a').forEach(a => {
-      const target = a.dataset.nav;
-      const isActive = (target === 'index' && (path === '' || path === 'index.html')) || target === path.replace('.html', '');
-      a.classList.toggle('is-active', isActive);
+  function generateDiaryId() {
+    return 'diary-' + Date.now().toString(36);
+  }
+
+  /* ── Anel de progresso ───────────────────────────────────── */
+
+  function setRing(el, pct) {
+    const C = 2 * Math.PI * 50; // circunferência com r=50
+    el.style.strokeDashoffset = C * (1 - Math.min(1, Math.max(0, pct)));
+  }
+
+  /* ── Navegação ───────────────────────────────────────────── */
+
+  function highlightNav(page) {
+    document.querySelectorAll('.bottom-nav a').forEach(a => {
+      const active = a.dataset.nav === page;
+      a.classList.toggle('is-active', active);
+      if (active) a.setAttribute('aria-current', 'page');
+      else a.removeAttribute('aria-current');
     });
   }
 
-  async function loadJSON(relativePath) {
-    const res = await fetch(base + relativePath, { cache: 'no-cache' });
-    if (!res.ok) throw new Error('Falha ao carregar ' + relativePath);
-    return res.json();
+  /* ── Toast ───────────────────────────────────────────────── */
+
+  let _toastTimer;
+  function showToast(msg) {
+    let t = document.getElementById('mbToast');
+    if (!t) {
+      t = document.createElement('div');
+      t.id = 'mbToast';
+      t.className = 'toast';
+      t.setAttribute('role', 'status');
+      t.setAttribute('aria-live', 'polite');
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.classList.add('is-visible');
+    clearTimeout(_toastTimer);
+    _toastTimer = setTimeout(() => t.classList.remove('is-visible'), 2600);
   }
 
-  function icon(name) {
-    const icons = {
-      check: '<svg viewBox="0 0 24 24" fill="none" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
-      flame: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2c1 3-2 4-2 7a3 3 0 0 0 6 0c2 2 2 5 0 8a7 7 0 0 1-9-11c.5 1 1.5 1.5 2 1.5C9 5 10 3 12 2z"/></svg>',
-      drop: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2s7 7.5 7 12a7 7 0 1 1-14 0c0-4.5 7-12 7-12z"/></svg>',
-      moon: '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.5A9 9 0 1 1 11.5 3 7 7 0 0 0 21 12.5z"/></svg>',
-      chevron: '<svg class="expand-chevron" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>'
-    };
-    return icons[name] || '';
+  /* ── Modal / Confirm helpers ─────────────────────────────── */
+
+  function openModal(id) {
+    const el = document.getElementById(id);
+    if (el) { el.classList.add('is-open'); document.body.style.overflow = 'hidden'; }
   }
 
-  /* ---------- Expansíveis (produtos / artigos / nutrição) ---------- */
-  function wireExpandable(container) {
-    $$('.expand-trigger', container).forEach(trigger => {
-      trigger.addEventListener('click', () => {
-        const card = trigger.closest('.product-card, .article-card, .nutrition-card');
-        card.classList.toggle('is-open');
-      });
-    });
+  function closeModal(id) {
+    const el = document.getElementById(id);
+    if (el) { el.classList.remove('is-open'); document.body.style.overflow = ''; }
   }
 
-  /* ==========================================================================
-     PÁGINA: DASHBOARD (index.html)
-     ========================================================================== */
+  function openConfirm(id) {
+    const el = document.getElementById(id);
+    if (el) { el.classList.add('is-open'); document.body.style.overflow = 'hidden'; }
+  }
+
+  function closeConfirm(id) {
+    const el = document.getElementById(id);
+    if (el) { el.classList.remove('is-open'); document.body.style.overflow = ''; }
+  }
+
+  // Fechar ao clicar no backdrop
+  document.addEventListener('click', e => {
+    if (e.target.classList.contains('modal-backdrop')) {
+      e.target.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+    if (e.target.classList.contains('confirm-backdrop')) {
+      e.target.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+  });
+
+  /* ── PÁGINA: Dashboard ───────────────────────────────────── */
+
   function initDashboard() {
-    const today = todayStr();
-    let activeTab = 'manha';
+    highlightNav('dashboard');
 
-    function render() {
-      const day = getDay(today);
-      const progress = dayProgress(today);
+    const today = getSkinDate();
+    const mode  = getModeForDate(today);
+    let currentPeriod = 'manha';
 
-      setRing($('.ritual-ring'), progress);
-      $('#streak-value').textContent = computeStreak();
-      $('#retinol-value').textContent = countRetinolApplications();
+    // Badge de modo
+    const modeLabel = mode === 'retinol' ? 'Modo Retinol' : 'Modo Recuperação';
+    const modeBadge = document.getElementById('modeBadge');
+    if (modeBadge) modeBadge.textContent = `${modeLabel} · Hoje`;
 
-      $('#mode-badge').textContent = modeLabel(day.mode) + ' · Hoje';
+    // Anel de progresso
+    const ringFill = document.getElementById('ringFill');
+    const ringPct  = document.getElementById('ringPct');
 
-      const tabsEl = $('.routine-tabs');
-      $$('.routine-tab', tabsEl).forEach(t => t.setAttribute('aria-selected', t.dataset.tab === activeTab ? 'true' : 'false'));
+    function updateRing() {
+      const itemsM = getChecklistItems('manha', mode).length;
+      const itemsN = getChecklistItems('noite', mode).length;
+      const total  = itemsM + itemsN;
+      if (total === 0) {
+        setRing(ringFill, 0);
+        ringPct.textContent = '0%';
+        return;
+      }
+      const pm  = dayProgress(today, 'manha', mode);
+      const pn  = dayProgress(today, 'noite', mode);
+      const pct = (pm * itemsM + pn * itemsN) / total;
+      setRing(ringFill, pct);
+      ringPct.textContent = `${Math.round(pct * 100)}%`;
+    }
 
-      const items = activeTab === 'manha' ? MANHA_ITEMS : NOITE_ITEMS[day.mode];
-      const list = $('#routine-list');
-      list.innerHTML = items.map(it => {
-        const done = !!day[activeTab][it.id];
-        return `<li class="checklist-item ${done ? 'is-done' : ''}">
-          <button class="checklist-item__btn" data-period="${activeTab}" data-item="${it.id}">
-            <span class="checklist-item__check">${icon('check')}</span>
-            <span class="checklist-item__label">${it.label}</span>
-          </button>
-        </li>`;
+    // Estatísticas
+    function updateStats() {
+      const sv = document.getElementById('streakVal');
+      const rv = document.getElementById('retinolVal');
+      if (sv) sv.textContent = `${computeStreak()} dias`;
+      if (rv) rv.textContent = `${countRetinolApplications()}×`;
+    }
+
+    // Checklist
+    function renderChecklist(period) {
+      const listEl  = document.getElementById('checklist');
+      const emptyEl = document.getElementById('checklistEmpty');
+      const items   = getChecklistItems(period, mode);
+
+      if (!listEl) return;
+
+      if (!items.length) {
+        listEl.innerHTML = '';
+        if (emptyEl) emptyEl.hidden = false;
+        return;
+      }
+      if (emptyEl) emptyEl.hidden = true;
+
+      const state = getDay(today);
+      listEl.innerHTML = items.map(item => {
+        const done = !!state[period][item.id];
+        return `
+          <li class="checklist-item${done ? ' checklist-item--done' : ''}"
+              data-id="${item.id}"
+              role="checkbox"
+              aria-checked="${done}"
+              tabindex="0">
+            <span class="checklist-item__check" aria-hidden="true"></span>
+            <span class="checklist-item__label">${item.label}</span>
+            ${item.tag ? `<span class="checklist-item__tag">${item.tag}</span>` : ''}
+          </li>`;
       }).join('');
 
-      $$('.checklist-item__btn', list).forEach(btn => {
-        btn.addEventListener('click', () => {
-          toggleItem(today, btn.dataset.period, btn.dataset.item);
-          render();
+      listEl.querySelectorAll('.checklist-item').forEach(li => {
+        function toggle() {
+          const s = getDay(today);
+          s[period][li.dataset.id] = !s[period][li.dataset.id];
+          saveDay(today, s);
+          renderChecklist(period);
+          updateRing();
+          updateStats();
+        }
+        li.addEventListener('click', toggle);
+        li.addEventListener('keydown', e => {
+          if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); }
         });
       });
-
-      renderWeek();
     }
 
-    function renderWeek() {
-      const grid = $('#week-grid');
-      const now = new Date();
-      const startOfWeek = new Date(now);
-      startOfWeek.setDate(now.getDate() - now.getDay()); // domingo
-      let html = '';
-      for (let i = 0; i < 7; i++) {
-        const d = new Date(startOfWeek);
-        d.setDate(startOfWeek.getDate() + i);
-        const mode = modeForDate(d);
-        const isToday = dateStr(d) === today;
-        html += `<div class="week-day ${isToday ? 'is-today' : ''}">
-          <span class="week-day__name">${WEEKDAY_NAMES[d.getDay()]}</span>
-          <span class="week-day__dot week-day__dot--${mode}"></span>
-          <span class="week-day__mode">${mode === 'retinol' ? 'Retinol' : 'Recup.'}</span>
-        </div>`;
+    // Abas
+    const tabManha = document.getElementById('tabManha');
+    const tabNoite = document.getElementById('tabNoite');
+
+    function setTab(period) {
+      currentPeriod = period;
+      if (tabManha) {
+        tabManha.classList.toggle('tab--active', period === 'manha');
+        tabManha.setAttribute('aria-selected', period === 'manha');
       }
-      grid.innerHTML = html;
+      if (tabNoite) {
+        tabNoite.classList.toggle('tab--active', period === 'noite');
+        tabNoite.setAttribute('aria-selected', period === 'noite');
+      }
+      renderChecklist(period);
     }
 
-    $$('.routine-tab').forEach(tab => {
-      tab.addEventListener('click', () => { activeTab = tab.dataset.tab; render(); });
+    if (tabManha) tabManha.addEventListener('click', () => setTab('manha'));
+    if (tabNoite) tabNoite.addEventListener('click', () => setTab('noite'));
+
+    // Cronograma semanal
+    function renderWeekGrid() {
+      const grid = document.getElementById('weekGrid');
+      if (!grid) return;
+      const DAY_NAMES = ['DOM', 'SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB'];
+      const todayIdx  = getWeekDay(today);
+      grid.innerHTML = DAY_NAMES.map((name, idx) => {
+        const dayMode  = WEEKLY_MODE[idx];
+        const isToday  = idx === todayIdx;
+        const cls = [
+          'week-day',
+          dayMode === 'retinol' ? 'week-day--retinol' : 'week-day--recuperacao',
+          isToday ? 'week-day--today' : '',
+        ].filter(Boolean).join(' ');
+        return `
+          <div class="${cls}">
+            <span class="week-day__label">${name}</span>
+            <span class="week-day__dot" title="${dayMode === 'retinol' ? 'Retinol' : 'Recuperação'}"></span>
+          </div>`;
+      }).join('');
+    }
+
+    // Inicializa
+    setTab('manha');
+    updateRing();
+    updateStats();
+    renderWeekGrid();
+  }
+
+  /* ── PÁGINA: Produtos ────────────────────────────────────── */
+
+  function initProdutos() {
+    highlightNav('produtos');
+
+    const listEl     = document.getElementById('productList');
+    const emptyEl    = document.getElementById('productEmpty');
+    const fabBtn     = document.getElementById('fabAdd');
+    const formTitle  = document.getElementById('productModalTitle');
+    const form       = document.getElementById('productForm');
+    const confirmMsg = document.getElementById('confirmDeleteMsg');
+    const confirmOk  = document.getElementById('confirmDeleteOk');
+    const confirmCan = document.getElementById('confirmDeleteCancel');
+
+    let editingId  = null;
+    let deletingId = null;
+
+    const PERIOD_LABELS = { manha: 'Manhã', noite: 'Noite', ambos: 'Ambos' };
+
+    function render() {
+      const products = getProducts();
+      if (!listEl) return;
+
+      if (!products.length) {
+        listEl.innerHTML = '';
+        if (emptyEl) emptyEl.hidden = false;
+        return;
+      }
+      if (emptyEl) emptyEl.hidden = true;
+
+      listEl.innerHTML = products.map(p => `
+        <div class="product-card" data-id="${p.id}">
+          <div class="product-card__header">
+            <div class="product-card__info">
+              <div class="product-card__category">${p.categoria || '—'}</div>
+              <div class="product-card__name">${p.nome}</div>
+              ${p.marca ? `<div class="product-card__brand">${p.marca}</div>` : ''}
+            </div>
+            <div class="product-card__period">
+              <span class="tag-pill tag-pill--${p.periodo || 'ambos'}">
+                ${PERIOD_LABELS[p.periodo] || p.periodo || 'Ambos'}
+              </span>
+            </div>
+          </div>
+          ${p.descricao ? `<div class="product-card__desc">${p.descricao}</div>` : ''}
+          <div class="product-card__actions">
+            <button class="product-card__btn btn-edit" data-id="${p.id}" aria-label="Editar ${p.nome}">Editar</button>
+            <button class="product-card__btn btn-delete" data-id="${p.id}" aria-label="Excluir ${p.nome}">Excluir</button>
+          </div>
+        </div>`).join('');
+
+      listEl.querySelectorAll('.btn-edit').forEach(btn => {
+        btn.addEventListener('click', () => openEdit(btn.dataset.id));
+      });
+      listEl.querySelectorAll('.btn-delete').forEach(btn => {
+        btn.addEventListener('click', () => askDelete(btn.dataset.id));
+      });
+    }
+
+    function openAdd() {
+      editingId = null;
+      if (formTitle) formTitle.textContent = 'Adicionar produto';
+      if (form) form.reset();
+      openModal('productModal');
+    }
+
+    function openEdit(id) {
+      editingId = id;
+      const products = getProducts();
+      const p = products.find(x => x.id === id);
+      if (!p || !form) return;
+      if (formTitle) formTitle.textContent = 'Editar produto';
+      form.elements['categoria'].value = p.categoria  || '';
+      form.elements['marca'].value     = p.marca       || '';
+      form.elements['nome'].value      = p.nome        || '';
+      form.elements['descricao'].value = p.descricao   || '';
+      form.elements['periodo'].value   = p.periodo     || 'manha';
+      openModal('productModal');
+    }
+
+    function askDelete(id) {
+      deletingId = id;
+      const p = getProducts().find(x => x.id === id);
+      if (confirmMsg) confirmMsg.textContent = `Tem certeza que deseja excluir "${p ? p.nome : 'este produto'}"?`;
+      openConfirm('confirmDelete');
+    }
+
+    function saveForm() {
+      if (!form) return;
+      const categoria = (form.elements['categoria'].value || '').trim();
+      const marca     = (form.elements['marca'].value     || '').trim();
+      const nome      = (form.elements['nome'].value      || '').trim();
+      const descricao = (form.elements['descricao'].value || '').trim();
+      const periodo   = form.elements['periodo'].value || 'manha';
+
+      if (!nome) { showToast('O nome comercial é obrigatório.'); return; }
+
+      const products = getProducts();
+      if (editingId) {
+        const idx = products.findIndex(x => x.id === editingId);
+        if (idx !== -1) {
+          products[idx] = { ...products[idx], categoria, marca, nome, descricao, periodo };
+        }
+        showToast('Produto atualizado.');
+      } else {
+        products.push({ id: generateId(), categoria, marca, nome, descricao, periodo });
+        showToast('Produto adicionado.');
+      }
+      saveProducts(products);
+      closeModal('productModal');
+      render();
+    }
+
+    // Eventos
+    if (fabBtn) fabBtn.addEventListener('click', openAdd);
+
+    const closeBtn = document.getElementById('productModalClose');
+    const saveBtn  = document.getElementById('productSave');
+    const cancelBtn = document.getElementById('productCancel');
+    if (closeBtn)  closeBtn.addEventListener('click',  () => closeModal('productModal'));
+    if (saveBtn)   saveBtn.addEventListener('click',   saveForm);
+    if (cancelBtn) cancelBtn.addEventListener('click', () => closeModal('productModal'));
+
+    if (confirmOk) confirmOk.addEventListener('click', () => {
+      if (!deletingId) return;
+      saveProducts(getProducts().filter(p => p.id !== deletingId));
+      deletingId = null;
+      closeConfirm('confirmDelete');
+      showToast('Produto excluído.');
+      render();
     });
+    if (confirmCan) confirmCan.addEventListener('click', () => closeConfirm('confirmDelete'));
 
     render();
   }
 
-  /* ==========================================================================
-     PÁGINA: PRODUTOS
-     ========================================================================== */
-  async function initProdutos() {
-    const container = $('#produtos-list');
-    try {
-      const produtos = await loadJSON('data/produtos.json');
-      container.innerHTML = produtos.map(p => `
-        <div class="product-card">
-          <button class="expand-trigger">
-            <span class="expand-trigger__left">
-              <span class="tag-pill ${p.periodo === 'Noite' ? 'tag-pill--noite' : ''}">${p.periodo}</span>
-              <span>
-                <h3>${p.nome}</h3>
-                <div class="expand-trigger__sub">${p.subtitulo}</div>
-              </span>
-            </span>
-            ${icon('chevron')}
-          </button>
-          <div class="expand-body">
-            <div class="expand-body__inner">
-              <p style="margin-bottom:10px;"><strong style="color:var(--ink)">${p.funcao}</strong></p>
-              <ul>${p.beneficios.map(b => `<li>${b}</li>`).join('')}</ul>
-              <div class="how-to-use">${p.comoUsar}</div>
-            </div>
-          </div>
-        </div>`).join('');
-      wireExpandable(container);
-    } catch (e) {
-      container.innerHTML = '<p>Não foi possível carregar os produtos. Verifique se o app está sendo aberto via servidor (ex: GitHub Pages) e não diretamente como arquivo local.</p>';
-    }
-  }
+  /* ── PÁGINA: Diário da Pele ──────────────────────────────── */
 
-  /* ==========================================================================
-     PÁGINA: NUTRIÇÃO
-     ========================================================================== */
-  async function initNutricao() {
-    const container = $('#nutricao-list');
-    try {
-      const itens = await loadJSON('data/nutricao.json');
-      container.innerHTML = itens.map(n => `
-        <div class="nutrition-card">
-          <button class="expand-trigger">
-            <span class="expand-trigger__left">
-              <span>
-                <h3>${n.categoria}</h3>
-                <div class="expand-trigger__sub">${n.exemplos.slice(0, 2).join(', ')}...</div>
-              </span>
-            </span>
-            ${icon('chevron')}
-          </button>
-          <div class="expand-body">
-            <div class="expand-body__inner">
-              <p>${n.beneficio}</p>
-              <div class="examples-row">${n.exemplos.map(e => `<span class="example-chip">${e}</span>`).join('')}</div>
-            </div>
-          </div>
-        </div>`).join('');
-      wireExpandable(container);
-    } catch (e) {
-      container.innerHTML = '<p>Não foi possível carregar o conteúdo de nutrição.</p>';
-    }
-  }
+  function initDiario() {
+    highlightNav('diario');
 
-  /* ==========================================================================
-     PÁGINA: BIBLIOTECA
-     ========================================================================== */
-  async function initBiblioteca() {
-    const container = $('#artigos-list');
-    try {
-      const artigos = await loadJSON('data/artigos.json');
-      container.innerHTML = artigos.map(a => `
-        <div class="article-card" id="artigo-${a.id}">
-          <button class="expand-trigger">
-            <span class="expand-trigger__left">
-              <span>
-                <h3>${a.titulo}</h3>
-                <div class="expand-trigger__sub">${a.resumo}</div>
-              </span>
-            </span>
-            ${icon('chevron')}
-          </button>
-          <div class="expand-body">
-            <div class="expand-body__inner">
-              ${a.conteudo.map(par => `<p>${par}</p>`).join('')}
-            </div>
-          </div>
-        </div>`).join('');
-      wireExpandable(container);
+    const listEl     = document.getElementById('diaryList');
+    const emptyEl    = document.getElementById('diaryEmpty');
+    const fabBtn     = document.getElementById('fabAdd');
+    const formTitle  = document.getElementById('diaryModalTitle');
+    const form       = document.getElementById('diaryForm');
+    const confirmMsg = document.getElementById('confirmDeleteMsg');
+    const confirmOk  = document.getElementById('confirmDeleteOk');
+    const confirmCan = document.getElementById('confirmDeleteCancel');
 
-      if (location.hash) {
-        const target = $(location.hash);
-        if (target) { target.classList.add('is-open'); target.scrollIntoView({ block: 'center' }); }
+    let editingId  = null;
+    let deletingId = null;
+
+    const METRICS = ['sensibilidade', 'hidratacao', 'acne', 'manchas'];
+
+    // Sliders → exibição ao vivo do valor
+    METRICS.forEach(key => {
+      const input = form ? form.elements[key] : null;
+      const disp  = document.getElementById(`val-${key}`);
+      if (input && disp) {
+        input.addEventListener('input', () => { disp.textContent = input.value; });
       }
-    } catch (e) {
-      container.innerHTML = '<p>Não foi possível carregar a biblioteca.</p>';
+    });
+
+    // Dots de métrica (1–5 preenchidos)
+    function renderDots(val, max) {
+      let html = '';
+      for (let i = 1; i <= max; i++) {
+        html += `<span class="diary-metric__dot${i <= val ? ' diary-metric__dot--filled' : ''}"></span>`;
+      }
+      return html;
     }
-  }
 
-  /* ==========================================================================
-     PÁGINA: PERFIL
-     ========================================================================== */
-  function initPerfil() {
-    $('#perfil-streak').textContent = computeStreak();
-    $('#perfil-checklists').textContent = countCompletedChecklists();
-    $('#perfil-retinol').textContent = countRetinolApplications();
-    $('#perfil-adesao').textContent = computeAdesao() + '%';
-  }
+    function render() {
+      const entries = getDiaryEntries().slice().sort((a, b) => b.date.localeCompare(a.date));
+      if (!listEl) return;
 
-  /* ---------- Service Worker (apenas registrado a partir da raiz) ---------- */
-  function registerSW() {
-    if ('serviceWorker' in navigator && document.body.dataset.registerSw === 'true') {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js').catch(() => {});
+      if (!entries.length) {
+        listEl.innerHTML = '';
+        if (emptyEl) emptyEl.hidden = false;
+        return;
+      }
+      if (emptyEl) emptyEl.hidden = true;
+
+      listEl.innerHTML = entries.map(e => `
+        <div class="diary-entry" data-id="${e.id}">
+          <div class="diary-entry__header">
+            <div class="diary-entry__date">${formatDateBR(e.date)}</div>
+            <div class="diary-entry__actions">
+              <button class="diary-entry__action diary-entry__action--edit btn-edit" data-id="${e.id}">Editar</button>
+              <button class="diary-entry__action diary-entry__action--delete btn-delete" data-id="${e.id}">Excluir</button>
+            </div>
+          </div>
+          <div class="diary-entry__metrics">
+            <div class="diary-metric">
+              <div class="diary-metric__label">Sensibilidade</div>
+              <div class="diary-metric__dots">${renderDots(e.sensibilidade, 5)}</div>
+            </div>
+            <div class="diary-metric">
+              <div class="diary-metric__label">Hidratação</div>
+              <div class="diary-metric__dots">${renderDots(e.hidratacao, 5)}</div>
+            </div>
+            <div class="diary-metric">
+              <div class="diary-metric__label">Acne</div>
+              <div class="diary-metric__dots">${renderDots(e.acne, 5)}</div>
+            </div>
+            <div class="diary-metric">
+              <div class="diary-metric__label">Manchas</div>
+              <div class="diary-metric__dots">${renderDots(e.manchas, 5)}</div>
+            </div>
+          </div>
+          ${e.observacoes ? `<div class="diary-entry__obs">${e.observacoes}</div>` : ''}
+        </div>`).join('');
+
+      listEl.querySelectorAll('.btn-edit').forEach(btn => {
+        btn.addEventListener('click', () => openEdit(btn.dataset.id));
+      });
+      listEl.querySelectorAll('.btn-delete').forEach(btn => {
+        btn.addEventListener('click', () => askDelete(btn.dataset.id));
       });
     }
+
+    function resetForm() {
+      if (!form) return;
+      form.elements['date'].value        = getSkinDate();
+      form.elements['observacoes'].value = '';
+      METRICS.forEach(key => {
+        form.elements[key].value = '1';
+        const disp = document.getElementById(`val-${key}`);
+        if (disp) disp.textContent = '1';
+      });
+    }
+
+    function openAdd() {
+      editingId = null;
+      if (formTitle) formTitle.textContent = 'Novo registro';
+      resetForm();
+      openModal('diaryModal');
+    }
+
+    function openEdit(id) {
+      editingId = id;
+      const e = getDiaryEntries().find(x => x.id === id);
+      if (!e || !form) return;
+      if (formTitle) formTitle.textContent = 'Editar registro';
+      form.elements['date'].value        = e.date;
+      form.elements['observacoes'].value = e.observacoes || '';
+      METRICS.forEach(key => {
+        form.elements[key].value = e[key] || 1;
+        const disp = document.getElementById(`val-${key}`);
+        if (disp) disp.textContent = e[key] || 1;
+      });
+      openModal('diaryModal');
+    }
+
+    function askDelete(id) {
+      deletingId = id;
+      const e = getDiaryEntries().find(x => x.id === id);
+      if (confirmMsg) confirmMsg.textContent = `Excluir o registro do dia ${e ? formatDateBR(e.date) : ''}?`;
+      openConfirm('confirmDelete');
+    }
+
+    function saveForm() {
+      if (!form) return;
+      const date        = form.elements['date'].value;
+      const observacoes = (form.elements['observacoes'].value || '').trim();
+
+      if (!date) { showToast('Selecione a data do registro.'); return; }
+
+      const entry = {
+        date,
+        observacoes,
+        sensibilidade: Number(form.elements['sensibilidade'].value) || 1,
+        hidratacao:    Number(form.elements['hidratacao'].value)    || 1,
+        acne:          Number(form.elements['acne'].value)          || 1,
+        manchas:       Number(form.elements['manchas'].value)       || 1,
+      };
+
+      const entries = getDiaryEntries();
+      if (editingId) {
+        const idx = entries.findIndex(x => x.id === editingId);
+        if (idx !== -1) entries[idx] = { ...entries[idx], ...entry };
+        showToast('Registro atualizado.');
+      } else {
+        entries.push({ id: generateDiaryId(), ...entry });
+        showToast('Registro salvo.');
+      }
+      saveDiaryEntries(entries);
+      closeModal('diaryModal');
+      render();
+    }
+
+    // Eventos
+    if (fabBtn) fabBtn.addEventListener('click', openAdd);
+
+    const closeBtn  = document.getElementById('diaryModalClose');
+    const saveBtn   = document.getElementById('diarySave');
+    const cancelBtn = document.getElementById('diaryCancel');
+    if (closeBtn)  closeBtn.addEventListener('click',  () => closeModal('diaryModal'));
+    if (saveBtn)   saveBtn.addEventListener('click',   saveForm);
+    if (cancelBtn) cancelBtn.addEventListener('click', () => closeModal('diaryModal'));
+
+    if (confirmOk) confirmOk.addEventListener('click', () => {
+      if (!deletingId) return;
+      saveDiaryEntries(getDiaryEntries().filter(e => e.id !== deletingId));
+      deletingId = null;
+      closeConfirm('confirmDelete');
+      showToast('Registro excluído.');
+      render();
+    });
+    if (confirmCan) confirmCan.addEventListener('click', () => closeConfirm('confirmDelete'));
+
+    render();
   }
 
-  /* ---------- Boot ---------- */
+  /* ── PÁGINA: Biblioteca ──────────────────────────────────── */
+
+  function initBiblioteca() {
+    highlightNav('biblioteca');
+
+    const tabs     = document.querySelectorAll('.lib-tab');
+    const sections = document.querySelectorAll('.lib-section');
+
+    function activateTab(tabEl) {
+      tabs.forEach(t => {
+        t.classList.remove('lib-tab--active');
+        t.setAttribute('aria-selected', 'false');
+      });
+      sections.forEach(s => s.classList.remove('is-active'));
+      tabEl.classList.add('lib-tab--active');
+      tabEl.setAttribute('aria-selected', 'true');
+      const target = document.getElementById(tabEl.dataset.section);
+      if (target) target.classList.add('is-active');
+    }
+
+    tabs.forEach(tab => tab.addEventListener('click', () => activateTab(tab)));
+
+    // Acordeões
+    document.querySelectorAll('.expand-trigger').forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        const body = trigger.nextElementSibling;
+        if (!body || !body.classList.contains('expand-body')) return;
+        const open = body.classList.toggle('is-open');
+        trigger.setAttribute('aria-expanded', open);
+      });
+    });
+  }
+
+  /* ── PÁGINA: Perfil ──────────────────────────────────────── */
+
+  function initPerfil() {
+    highlightNav('perfil');
+
+    const els = {
+      streak:      document.getElementById('perfil-streak'),
+      checklists:  document.getElementById('perfil-checklists'),
+      retinol:     document.getElementById('perfil-retinol'),
+      adesao:      document.getElementById('perfil-adesao'),
+      diaryRecent: document.getElementById('perfil-diary-recent'),
+    };
+
+    if (els.streak)     els.streak.textContent     = computeStreak();
+    if (els.checklists) els.checklists.textContent = countCompletedChecklists();
+    if (els.retinol)    els.retinol.textContent     = countRetinolApplications();
+    if (els.adesao)     els.adesao.textContent      = `${computeAdesao()}%`;
+
+    // Últimos registros do diário
+    if (els.diaryRecent) {
+      const entries = getDiaryEntries()
+        .slice()
+        .sort((a, b) => b.date.localeCompare(a.date))
+        .slice(0, 3);
+
+      if (!entries.length) {
+        els.diaryRecent.innerHTML = `
+          <p style="font-size:13px;color:var(--ink-light);line-height:1.55">
+            Nenhum registro no diário ainda.
+            <a href="diario.html" style="color:var(--sage-dark);font-weight:500">Criar o primeiro →</a>
+          </p>`;
+      } else {
+        els.diaryRecent.innerHTML = entries.map(e => `
+          <div style="display:flex;align-items:center;justify-content:space-between;
+                      padding:11px 0;border-bottom:1px solid var(--nude-30)">
+            <span style="font-size:14px;color:var(--ink);font-weight:500">${formatDateBR(e.date)}</span>
+            <span style="font-size:12px;color:var(--ink-light)">
+              Hid: ${e.hidratacao}/5 &nbsp;·&nbsp; Acne: ${e.acne}/5 &nbsp;·&nbsp; Manchas: ${e.manchas}/5
+            </span>
+          </div>`).join('');
+      }
+    }
+  }
+
+  /* ── Service Worker ──────────────────────────────────────── */
+
+  function registerSW() {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker
+        .register('./sw.js')
+        .catch(err => console.warn('[MB] SW registration failed:', err));
+    }
+  }
+
+  /* ── Boot ────────────────────────────────────────────────── */
+
   document.addEventListener('DOMContentLoaded', () => {
-    highlightNav();
-    registerSW();
     const page = document.body.dataset.page;
-    if (page === 'dashboard') initDashboard();
-    else if (page === 'produtos') initProdutos();
-    else if (page === 'nutricao') initNutricao();
-    else if (page === 'biblioteca') initBiblioteca();
-    else if (page === 'perfil') initPerfil();
+
+    if (document.body.dataset.registerSw === 'true') registerSW();
+
+    switch (page) {
+      case 'dashboard':  initDashboard();  break;
+      case 'produtos':   initProdutos();   break;
+      case 'diario':     initDiario();     break;
+      case 'biblioteca': initBiblioteca(); break;
+      case 'perfil':     initPerfil();     break;
+    }
   });
 
-  window.MB = { showToast };
+  /* ── API pública mínima ──────────────────────────────────── */
+  window.MB = {
+    getSkinDate,
+    getProducts,
+    saveProducts,
+    getDiaryEntries,
+    saveDiaryEntries,
+    showToast,
+  };
+
 })();
