@@ -299,6 +299,7 @@ main {
   user-select: none;
   transition: opacity var(--transition);
   border-radius: var(--radius-sm);
+  animation: fadeInUp .22s ease both;
 }
 .checklist-item:last-child { border-bottom: none; }
 .checklist-item:active { opacity: .7; }
@@ -1076,6 +1077,125 @@ main {
   transform: translateX(-50%) translateY(0);
 }
 
+/* ── Tip Card (Dica do Dia) ──────────────────────────────── */
+.tip-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: linear-gradient(135deg, rgba(168,195,176,.12) 0%, rgba(245,235,221,.18) 100%);
+  border: 1px solid var(--sage-20);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  min-height: 72px;
+  position: relative;
+}
+.tip-card__emoji {
+  font-size: 22px;
+  flex-shrink: 0;
+  line-height: 1;
+  margin-top: 1px;
+}
+.tip-card__body { flex: 1; min-width: 0; padding-right: 8px; }
+.tip-card__titulo {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 3px;
+}
+.tip-card__texto {
+  font-size: 12.5px;
+  color: var(--ink-light);
+  line-height: 1.55;
+}
+.tip-card__next {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(168,195,176,.25);
+  color: var(--sage-dark);
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
+  margin-top: 2px;
+  line-height: 1;
+}
+.tip-card__next:hover { background: rgba(168,195,176,.45); }
+.tip-card__next:active { transform: scale(.9); }
+
+/* ── Produto: campos novos ───────────────────────────────── */
+.product-card__meta {
+  padding: 0 16px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.product-card__dias {
+  font-size: 11.5px;
+  color: var(--ink-light);
+}
+.product-card__obs {
+  padding: 0 16px 14px;
+  font-size: 12px;
+  color: var(--sage-dark);
+  line-height: 1.5;
+  font-style: italic;
+}
+
+/* ── Dias da semana (checkboxes no formulário) ───────────── */
+.dias-semana {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+.dias-semana__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+}
+.dias-semana__label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: .03em;
+  color: var(--ink-light);
+  text-transform: uppercase;
+  user-select: none;
+}
+.dias-semana__check {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--nude);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition), border-color var(--transition);
+  background: #fff;
+}
+.dias-semana__input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.dias-semana__input:checked + .dias-semana__check {
+  background: var(--sage);
+  border-color: var(--sage-dark);
+}
+.dias-semana__input:checked + .dias-semana__check::after {
+  content: '';
+  width: 5px;
+  height: 8px;
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(45deg) translateY(-1px);
+}
+
 /* ── Animations ──────────────────────────────────────────── */
 @keyframes fadeIn {
   from { opacity: 0; }
@@ -1088,6 +1208,10 @@ main {
 @keyframes popIn {
   from { transform: scale(.88); opacity: 0; }
   to   { transform: scale(1);   opacity: 1; }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ── Utility ─────────────────────────────────────────────── */
