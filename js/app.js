@@ -7,7 +7,7 @@
 
   /* ── Constantes ─────────────────────────────────────────── */
 
-  // Dia da semana 0=Dom … 6=Sáb → modo da rotina noturna
+  // Dia da semana 0=Dom … 6=Sáb → modo da rotina noturna (usado só para badge)
   const WEEKLY_MODE = {
     0: 'recuperacao', // Domingo
     1: 'retinol',     // Segunda
@@ -18,63 +18,94 @@
     6: 'recuperacao', // Sábado
   };
 
-  // Produtos padrão carregados no primeiro acesso
+  // Dicas rápidas para o widget "Dica do Dia" no dashboard
+  const TIPS = [
+    { emoji: '☀️', titulo: 'Protetor Solar', texto: 'Use FPS 30+ todo dia, mesmo em dias nublados. O UVA penetra vidros e envelhece a pele silenciosamente.' },
+    { emoji: '🌙', titulo: 'Retinol', texto: 'Comece com 2–3× por semana. A irritação inicial é normal e diminui com o tempo. Sempre use protetor no dia seguinte.' },
+    { emoji: '💧', titulo: 'Hidratação', texto: 'Aplique o hidratante na pele ainda levemente úmida para potencializar a absorção e evitar ressecamento.' },
+    { emoji: '🍊', titulo: 'Antioxidantes', texto: 'Vitamina C pela manhã neutraliza radicais livres gerados pela exposição ao sol e à poluição ao longo do dia.' },
+    { emoji: '🥗', titulo: 'Alimentação', texto: 'Açúcar em excesso glica as fibras de colágeno, tornando-as rígidas. Prefira alimentos de baixo índice glicêmico.' },
+    { emoji: '😴', titulo: 'Sono', texto: 'Colágeno é produzido durante o sono profundo. Dormir bem é uma etapa real da sua rotina de skincare.' },
+    { emoji: '✨', titulo: 'Colágeno', texto: 'A produção de colágeno cai ~1% ao ano a partir dos 25. Retinol, vitamina C e proteção solar são os maiores estímulos.' },
+    { emoji: '🌿', titulo: 'Niacinamida', texto: 'Tolerada por quase todos os tipos de pele. Combina bem com retinol e reduz poros, oleosidade e manchas.' },
+    { emoji: '🫧', titulo: 'Limpeza', texto: 'Lave o rosto com água morna, não quente. A água quente remove lipídeos da barreira cutânea e resseca a pele.' },
+    { emoji: '📅', titulo: 'Consistência', texto: 'Skincare funciona com constância. Resultados aparecem após semanas — não dias. Sua rotina diária é o que faz a diferença.' },
+  ];
+
+  // Produtos padrão — carregados apenas no primeiro acesso
+  // horario: qual aba do checklist (manha/noite/ambos)
+  // diasSemana: [] = todos os dias; [1,3,5] = seg/qua/sex
+  // observacoes: anotações livres sobre o produto
   const DEFAULT_PRODUCTS = [
     {
       id: 'prod-vc10',
       categoria: 'Vitamina C',
       marca: 'Skinceuticals',
       nome: 'VC-10',
-      periodo: 'manha',
+      horario: 'manha',
+      diasSemana: [],
       descricao: 'Sérum antioxidante com ácido ascórbico a 10%. Aplique sobre a pele limpa e seca antes do hidratante.',
+      observacoes: '',
     },
     {
       id: 'prod-melaclear',
       categoria: 'Despigmentante',
       marca: 'Adcos',
       nome: 'Melaclear',
-      periodo: 'manha',
+      horario: 'manha',
+      diasSemana: [],
       descricao: 'Uniformizador de tom com agentes clareadores. Ideal para manchas superficiais.',
+      observacoes: '',
     },
     {
       id: 'prod-gh01',
       categoria: 'Hidratante',
       marca: 'Adcos',
       nome: 'GH-01',
-      periodo: 'ambos',
+      horario: 'ambos',
+      diasSemana: [],
       descricao: 'Hidratante facial com textura leve, adequado para uso manhã e noite.',
+      observacoes: '',
     },
     {
       id: 'prod-rn03',
       categoria: 'Retinol',
       marca: 'Principia',
       nome: 'RN-0,3',
-      periodo: 'noite',
-      descricao: 'Retinol 0,3% para renovação celular. Usar apenas nas noites do cronograma retinol.',
+      horario: 'noite',
+      diasSemana: [1, 3, 5],
+      descricao: 'Retinol 0,3% para renovação celular.',
+      observacoes: 'Usar apenas nas noites de retinol (seg/qua/sex). Sempre seguir de FPS no dia seguinte.',
     },
     {
       id: 'prod-ni10',
       categoria: 'Niacinamida',
       marca: 'Adcos',
       nome: 'NI-10',
-      periodo: 'noite',
+      horario: 'noite',
+      diasSemana: [],
       descricao: 'Niacinamida 10% para controle de oleosidade e uniformização do tom.',
+      observacoes: '',
     },
     {
       id: 'prod-cm01',
       categoria: 'Regenerador',
       marca: 'Adcos',
       nome: 'CM-01',
-      periodo: 'noite',
+      horario: 'noite',
+      diasSemana: [],
       descricao: 'Creme regenerador noturno. Usar como último passo da rotina de noite.',
+      observacoes: '',
     },
     {
       id: 'prod-fps',
       categoria: 'Proteção Solar',
       marca: '',
       nome: 'Protetor Solar',
-      periodo: 'manha',
+      horario: 'manha',
+      diasSemana: [],
       descricao: 'FPS 30 ou superior. Último passo obrigatório da rotina da manhã.',
+      observacoes: '',
     },
   ];
 
@@ -131,7 +162,31 @@
   function getProducts() {
     try {
       const raw = localStorage.getItem(KEY_PRODUCTS);
-      if (raw) return JSON.parse(raw);
+      if (raw) {
+        let products = JSON.parse(raw);
+        // Migração: produtos legados podem ter 'periodo' em vez de 'horario'
+        // e não possuem 'diasSemana' nem 'observacoes'
+        let needsSave = false;
+        products = products.map(p => {
+          const updated = { ...p };
+          if (!updated.horario && updated.periodo) {
+            updated.horario = updated.periodo;
+            needsSave = true;
+          }
+          if (!updated.diasSemana) {
+            // Retinol → seg/qua/sex por padrão para preservar comportamento anterior
+            updated.diasSemana = (updated.categoria === 'Retinol') ? [1, 3, 5] : [];
+            needsSave = true;
+          }
+          if (updated.observacoes === undefined) {
+            updated.observacoes = '';
+            needsSave = true;
+          }
+          return updated;
+        });
+        if (needsSave) saveProducts(products);
+        return products;
+      }
     } catch (e) { /* continua */ }
     // Primeiro acesso: semeia os produtos padrão
     saveProducts(DEFAULT_PRODUCTS);
@@ -180,30 +235,29 @@
   }
 
   /**
-   * Retorna os itens do checklist para um período e modo.
+   * Retorna os itens do checklist para um período.
    * "Lavar o rosto" é sempre o primeiro item.
-   * Produtos com categoria "Retinol" só aparecem no modo retinol.
+   * Cada produto pode ter diasSemana configurados — se configurados,
+   * o produto só aparece nos dias da semana escolhidos.
+   * O parâmetro 'mode' é mantido para compatibilidade mas não filtra mais produtos.
    */
   function getChecklistItems(period, mode) {
     const products = getProducts();
+    const todayDay = getWeekDay(getSkinDate());
     const items = [{ id: 'lavar-rosto', label: 'Lavar o rosto', tag: null }];
 
     products.forEach(p => {
-      const pertenceManha = period === 'manha' && (p.periodo === 'manha' || p.periodo === 'ambos');
-      const pertenceNoite = period === 'noite' && (p.periodo === 'noite' || p.periodo === 'ambos');
+      const horario = p.horario || p.periodo || 'ambos'; // compat legado
+      const pertenceManha = period === 'manha' && (horario === 'manha' || horario === 'ambos');
+      const pertenceNoite = period === 'noite' && (horario === 'noite' || horario === 'ambos');
 
-      if (pertenceManha) {
-        items.push({ id: p.id, label: p.nome, tag: p.categoria });
-        return;
-      }
-      if (pertenceNoite) {
-        // Retinol só aparece nas noites de retinol
-        if (p.categoria === 'Retinol') {
-          if (mode === 'retinol') items.push({ id: p.id, label: p.nome, tag: p.categoria });
-        } else {
-          items.push({ id: p.id, label: p.nome, tag: p.categoria });
-        }
-      }
+      if (!pertenceManha && !pertenceNoite) return;
+
+      // Filtrar por dias da semana se configurado ([] = todos os dias)
+      const dias = p.diasSemana;
+      if (dias && dias.length > 0 && !dias.includes(todayDay)) return;
+
+      items.push({ id: p.id, label: p.nome, tag: p.categoria });
     });
 
     return items;
@@ -433,14 +487,15 @@
       if (emptyEl) emptyEl.hidden = true;
 
       const state = getDay(today);
-      listEl.innerHTML = items.map(item => {
+      listEl.innerHTML = items.map((item, idx) => {
         const done = !!state[period][item.id];
         return `
           <li class="checklist-item${done ? ' checklist-item--done' : ''}"
               data-id="${item.id}"
               role="checkbox"
               aria-checked="${done}"
-              tabindex="0">
+              tabindex="0"
+              style="animation-delay:${idx * 0.04}s">
             <span class="checklist-item__check" aria-hidden="true"></span>
             <span class="checklist-item__label">${item.label}</span>
             ${item.tag ? `<span class="checklist-item__tag">${item.tag}</span>` : ''}
@@ -450,11 +505,23 @@
       listEl.querySelectorAll('.checklist-item').forEach(li => {
         function toggle() {
           const s = getDay(today);
-          s[period][li.dataset.id] = !s[period][li.dataset.id];
+          const wasEmpty = !s[period][li.dataset.id];
+          s[period][li.dataset.id] = wasEmpty;
           saveDay(today, s);
           renderChecklist(period);
           updateRing();
           updateStats();
+
+          // Celebração ao completar o período
+          if (wasEmpty) {
+            const currentItems = getChecklistItems(period, mode);
+            const freshState   = getDay(today);
+            const allDone = currentItems.every(i => freshState[period][i.id]);
+            if (allDone && currentItems.length > 0) {
+              const label = period === 'manha' ? 'manhã' : 'noite';
+              showToast(`Rotina da ${label} concluída! 🌟`);
+            }
+          }
         }
         li.addEventListener('click', toggle);
         li.addEventListener('keydown', e => {
@@ -505,11 +572,36 @@
       }).join('');
     }
 
+    // Dica do Dia
+    function initTip() {
+      const container = document.getElementById('tipCard');
+      if (!container) return;
+      // Semente diária: mesma dica o dia inteiro, muda a cada novo dia cosmético
+      const seed = today.replace(/-/g, '').split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+      let idx = seed % TIPS.length;
+      function renderTip() {
+        const tip = TIPS[idx];
+        container.innerHTML = `
+          <span class="tip-card__emoji" aria-hidden="true">${tip.emoji}</span>
+          <div class="tip-card__body">
+            <div class="tip-card__titulo">${tip.titulo}</div>
+            <div class="tip-card__texto">${tip.texto}</div>
+          </div>
+          <button class="tip-card__next" id="tipNext" aria-label="Próxima dica" title="Próxima dica">›</button>`;
+        document.getElementById('tipNext').addEventListener('click', () => {
+          idx = (idx + 1) % TIPS.length;
+          renderTip();
+        });
+      }
+      renderTip();
+    }
+
     // Inicializa
     setTab('manha');
     updateRing();
     updateStats();
     renderWeekGrid();
+    initTip();
   }
 
   /* ── PÁGINA: Produtos ────────────────────────────────────── */
@@ -529,7 +621,13 @@
     let editingId  = null;
     let deletingId = null;
 
-    const PERIOD_LABELS = { manha: 'Manhã', noite: 'Noite', ambos: 'Ambos' };
+    const HORARIO_LABELS = { manha: 'Manhã', noite: 'Noite', ambos: 'Manhã e Noite' };
+    const DIA_NAMES_SHORT = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+
+    function formatDias(dias) {
+      if (!dias || !dias.length) return 'Todos os dias';
+      return dias.map(d => DIA_NAMES_SHORT[d]).join(', ');
+    }
 
     function render() {
       const products = getProducts();
@@ -542,7 +640,9 @@
       }
       if (emptyEl) emptyEl.hidden = true;
 
-      listEl.innerHTML = products.map(p => `
+      listEl.innerHTML = products.map(p => {
+        const horario = p.horario || p.periodo || 'ambos';
+        return `
         <div class="product-card" data-id="${p.id}">
           <div class="product-card__header">
             <div class="product-card__info">
@@ -551,17 +651,22 @@
               ${p.marca ? `<div class="product-card__brand">${p.marca}</div>` : ''}
             </div>
             <div class="product-card__period">
-              <span class="tag-pill tag-pill--${p.periodo || 'ambos'}">
-                ${PERIOD_LABELS[p.periodo] || p.periodo || 'Ambos'}
+              <span class="tag-pill tag-pill--${horario}">
+                ${HORARIO_LABELS[horario] || horario}
               </span>
             </div>
           </div>
+          <div class="product-card__meta">
+            <span class="product-card__dias">📅 ${formatDias(p.diasSemana)}</span>
+          </div>
           ${p.descricao ? `<div class="product-card__desc">${p.descricao}</div>` : ''}
+          ${p.observacoes ? `<div class="product-card__obs">${p.observacoes}</div>` : ''}
           <div class="product-card__actions">
             <button class="product-card__btn btn-edit" data-id="${p.id}" aria-label="Editar ${p.nome}">Editar</button>
             <button class="product-card__btn btn-delete" data-id="${p.id}" aria-label="Excluir ${p.nome}">Excluir</button>
           </div>
-        </div>`).join('');
+        </div>`;
+      }).join('');
 
       listEl.querySelectorAll('.btn-edit').forEach(btn => {
         btn.addEventListener('click', () => openEdit(btn.dataset.id));
@@ -584,11 +689,18 @@
       const p = products.find(x => x.id === id);
       if (!p || !form) return;
       if (formTitle) formTitle.textContent = 'Editar produto';
-      form.elements['categoria'].value = p.categoria  || '';
-      form.elements['marca'].value     = p.marca       || '';
-      form.elements['nome'].value      = p.nome        || '';
-      form.elements['descricao'].value = p.descricao   || '';
-      form.elements['periodo'].value   = p.periodo     || 'manha';
+      form.elements['categoria'].value   = p.categoria   || '';
+      form.elements['marca'].value       = p.marca        || '';
+      form.elements['nome'].value        = p.nome         || '';
+      form.elements['descricao'].value   = p.descricao    || '';
+      form.elements['horario'].value     = p.horario || p.periodo || 'manha';
+      form.elements['observacoes'].value = p.observacoes  || '';
+      // Dias da semana — marca os checkboxes correspondentes
+      const dias = p.diasSemana || [];
+      [0,1,2,3,4,5,6].forEach(d => {
+        const cb = form.elements[`dia-${d}`];
+        if (cb) cb.checked = dias.includes(d);
+      });
       openModal('productModal');
     }
 
@@ -601,11 +713,16 @@
 
     function saveForm() {
       if (!form) return;
-      const categoria = (form.elements['categoria'].value || '').trim();
-      const marca     = (form.elements['marca'].value     || '').trim();
-      const nome      = (form.elements['nome'].value      || '').trim();
-      const descricao = (form.elements['descricao'].value || '').trim();
-      const periodo   = form.elements['periodo'].value || 'manha';
+      const categoria   = (form.elements['categoria'].value   || '').trim();
+      const marca       = (form.elements['marca'].value       || '').trim();
+      const nome        = (form.elements['nome'].value        || '').trim();
+      const descricao   = (form.elements['descricao'].value   || '').trim();
+      const horario     = form.elements['horario'].value      || 'manha';
+      const observacoes = (form.elements['observacoes'].value || '').trim();
+      const diasSemana  = [0,1,2,3,4,5,6].filter(d => {
+        const cb = form.elements[`dia-${d}`];
+        return cb && cb.checked;
+      });
 
       if (!nome) { showToast('O nome comercial é obrigatório.'); return; }
 
@@ -613,11 +730,11 @@
       if (editingId) {
         const idx = products.findIndex(x => x.id === editingId);
         if (idx !== -1) {
-          products[idx] = { ...products[idx], categoria, marca, nome, descricao, periodo };
+          products[idx] = { ...products[idx], categoria, marca, nome, descricao, horario, diasSemana, observacoes };
         }
         showToast('Produto atualizado.');
       } else {
-        products.push({ id: generateId(), categoria, marca, nome, descricao, periodo });
+        products.push({ id: generateId(), categoria, marca, nome, descricao, horario, diasSemana, observacoes });
         showToast('Produto adicionado.');
       }
       saveProducts(products);
