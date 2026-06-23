@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Produtos — MagaBeauty</title>
-<meta name="theme-color" content="#A8C3B0">
-<link rel="manifest" href="../manifest.json">
-<link rel="icon" href="../assets/icon-192.png">
-<link rel="apple-touch-icon" href="../assets/icon-192.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="MagaBeauty">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Produtos — MagaBeauty</title>
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#A8C3B0">
+  <link rel="apple-touch-icon" href="../assets/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body data-page="produtos" data-base="../">
 
@@ -27,36 +24,174 @@
   </div>
 </header>
 
-<div class="mb-page-title">
-  <div class="mb-eyebrow">Sua rotina</div>
-  <h1>Produtos</h1>
-  <p>Função e benefícios de cada etapa da sua rotina.</p>
-</div>
-
 <main>
-  <div id="produtos-list"></div>
+  <div class="page-header">
+    <div class="page-header__eyebrow">Sua rotina</div>
+    <h1 class="page-header__title">Produtos</h1>
+    <p class="page-header__sub">
+      Adicione, edite ou remova os produtos da sua rotina.
+      O checklist do dashboard é atualizado automaticamente.
+    </p>
+  </div>
+
+  <!-- Lista de produtos (renderizada pelo JS) -->
+  <div id="productList" class="product-list"></div>
+
+  <!-- Estado vazio -->
+  <div id="productEmpty" class="empty-state" hidden>
+    <div class="empty-state__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/>
+        <line x1="7" y1="7" x2="7.01" y2="7"/>
+      </svg>
+    </div>
+    <div class="empty-state__title">Nenhum produto ainda</div>
+    <p class="empty-state__sub">
+      Toque no botão <strong>+</strong> para adicionar<br>
+      o primeiro produto da sua rotina.
+    </p>
+  </div>
 </main>
 
-<nav class="bottom-nav">
-  <a href="../index.html" data-nav="index">
-    <svg viewBox="0 0 24 24"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9h12v-9"/></svg>
-    Início
+<!-- Botão flutuante: adicionar produto -->
+<button class="btn btn--fab" id="fabAdd" aria-label="Adicionar produto">+</button>
+
+<!-- ── Modal: adicionar / editar produto ─────────────────── -->
+<div class="modal-backdrop" id="productModal" role="dialog" aria-modal="true" aria-labelledby="productModalTitle">
+  <div class="modal-box">
+    <div class="modal-handle" aria-hidden="true"></div>
+    <h2 class="modal-title" id="productModalTitle">Adicionar produto</h2>
+
+    <div id="productForm">
+
+      <div class="form-group">
+        <label class="form-label" for="field-categoria">Categoria</label>
+        <input
+          class="form-input"
+          type="text"
+          id="field-categoria"
+          name="categoria"
+          placeholder="Ex: Retinol, Vitamina C, Hidratante…"
+          autocomplete="off"
+        >
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="field-marca">Marca</label>
+        <input
+          class="form-input"
+          type="text"
+          id="field-marca"
+          name="marca"
+          placeholder="Ex: Principia, Adcos, La Roche-Posay…"
+          autocomplete="off"
+        >
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="field-nome">
+          Nome comercial
+          <span style="color:#C0756B" aria-hidden="true"> *</span>
+        </label>
+        <input
+          class="form-input"
+          type="text"
+          id="field-nome"
+          name="nome"
+          placeholder="Ex: RN-0,3"
+          autocomplete="off"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label class="form-label form-label--optional" for="field-descricao">Descrição</label>
+        <textarea
+          class="form-textarea"
+          id="field-descricao"
+          name="descricao"
+          placeholder="Função, concentração, modo de uso…"
+          rows="3"
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="field-periodo">Período na rotina</label>
+        <select class="form-select" id="field-periodo" name="periodo">
+          <option value="manha">☀️ Manhã</option>
+          <option value="noite">🌙 Noite</option>
+          <option value="ambos">🌗 Manhã e Noite</option>
+        </select>
+      </div>
+
+    </div><!-- /productForm -->
+
+    <div class="modal-actions">
+      <button class="btn btn--primary btn--block" id="productSave">Salvar produto</button>
+      <button class="btn btn--ghost btn--block" id="productCancel">Cancelar</button>
+    </div>
+
+    <!-- Botão fechar (acessibilidade) -->
+    <button
+      class="visually-hidden"
+      id="productModalClose"
+      aria-label="Fechar modal"
+    >Fechar</button>
+  </div>
+</div>
+
+<!-- ── Diálogo: confirmar exclusão ───────────────────────── -->
+<div class="confirm-backdrop" id="confirmDelete" role="alertdialog" aria-modal="true" aria-labelledby="confirmDeleteTitle">
+  <div class="confirm-box">
+    <div class="confirm-box__title" id="confirmDeleteTitle">Excluir produto</div>
+    <p class="confirm-box__msg" id="confirmDeleteMsg">
+      Tem certeza que deseja excluir este produto?
+    </p>
+    <div class="confirm-box__actions">
+      <button class="btn btn--ghost" id="confirmDeleteCancel">Cancelar</button>
+      <button class="btn btn--danger" id="confirmDeleteOk">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Nav -->
+<nav class="bottom-nav" aria-label="Navegação principal">
+  <a href="../index.html" data-nav="dashboard">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+    <span>Início</span>
   </a>
   <a href="produtos.html" data-nav="produtos">
-    <svg viewBox="0 0 24 24"><path d="M9 3h6v3.2c0 .5.2 1 .6 1.3l2 1.9c.5.4.8 1.1.8 1.8V19a2 2 0 0 1-2 2H8.6a2 2 0 0 1-2-2V11.2c0-.7.3-1.4.8-1.8l2-1.9c.4-.4.6-.8.6-1.3V3Z"/><path d="M8 14h8"/></svg>
-    Produtos
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/>
+      <line x1="7" y1="7" x2="7.01" y2="7"/>
+    </svg>
+    <span>Produtos</span>
   </a>
-  <a href="nutricao.html" data-nav="nutricao">
-    <svg viewBox="0 0 24 24"><path d="M12 21c-4.5-1-8-5-8-9.5C4 7 6.5 4 9.5 4c1.2 0 2 .5 2.5 1 .5-.5 1.3-1 2.5-1 3 0 5.5 3 5.5 7.5 0 4.5-3.5 8.5-8 9.5Z"/></svg>
-    Nutrição
+  <a href="diario.html" data-nav="diario">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+      <polyline points="14 2 14 8 20 8"/>
+      <line x1="16" y1="13" x2="8" y2="13"/>
+      <line x1="16" y1="17" x2="8" y2="17"/>
+    </svg>
+    <span>Diário</span>
   </a>
   <a href="biblioteca.html" data-nav="biblioteca">
-    <svg viewBox="0 0 24 24"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5Z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5Z"/></svg>
-    Biblioteca
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
+      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
+    </svg>
+    <span>Biblioteca</span>
   </a>
   <a href="perfil.html" data-nav="perfil">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c1.2-3.5 4-5.2 7-5.2s5.8 1.7 7 5.2"/></svg>
-    Perfil
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+      <circle cx="12" cy="7" r="4"/>
+    </svg>
+    <span>Perfil</span>
   </a>
 </nav>
 

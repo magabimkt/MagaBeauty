@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Biblioteca — MagaBeauty</title>
-<meta name="theme-color" content="#A8C3B0">
-<link rel="manifest" href="../manifest.json">
-<link rel="icon" href="../assets/icon-192.png">
-<link rel="apple-touch-icon" href="../assets/icon-192.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="MagaBeauty">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Biblioteca — MagaBeauty</title>
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#A8C3B0">
+  <link rel="apple-touch-icon" href="../assets/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body data-page="biblioteca" data-base="../">
 
@@ -27,36 +24,499 @@
   </div>
 </header>
 
-<div class="mb-page-title">
-  <div class="mb-eyebrow">Ciência da beleza</div>
-  <h1>Biblioteca</h1>
-  <p>Artigos curtos sobre os fundamentos do envelhecimento e cuidado da pele.</p>
-</div>
-
 <main>
-  <div id="artigos-list"></div>
+  <div class="page-header">
+    <div class="page-header__eyebrow">Ciência da beleza</div>
+    <h1 class="page-header__title">Biblioteca de Dicas</h1>
+    <p class="page-header__sub">Fundamentos para cuidar da pele com conhecimento.</p>
+  </div>
+
+  <!-- Abas de navegação -->
+  <div class="lib-tabs" role="tablist" aria-label="Categorias da biblioteca">
+    <button class="lib-tab lib-tab--active" data-section="lib-skincare" role="tab" aria-selected="true">Skincare</button>
+    <button class="lib-tab" data-section="lib-nutricao" role="tab" aria-selected="false">Nutrição</button>
+    <button class="lib-tab" data-section="lib-sono" role="tab" aria-selected="false">Sono</button>
+    <button class="lib-tab" data-section="lib-habitos" role="tab" aria-selected="false">Hábitos</button>
+    <button class="lib-tab" data-section="lib-envelhecimento" role="tab" aria-selected="false">Envelhecimento</button>
+  </div>
+
+  <!-- ── SEÇÃO: Skincare ───────────────────────────────── -->
+  <div class="lib-section is-active" id="lib-skincare" role="tabpanel">
+    <div class="card card--flush">
+
+      <button class="expand-trigger" aria-expanded="false">
+        <div class="expand-trigger__main">
+          <div class="expand-trigger__title">Retinol</div>
+          <div class="expand-trigger__sub">O ativo mais estudado para renovação celular</div>
+        </div>
+        <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="expand-body">
+        <div class="expand-body__inner">
+          <div class="expand-body__content">
+            <p>O retinol é um derivado da vitamina A que acelera a renovação das células da epiderme e estimula os fibroblastos a produzirem mais colágeno. Com uso contínuo, reduz linhas finas, minimiza poros e uniformiza manchas.</p>
+            <p style="margin-top:10px">Por aumentar a sensibilidade ao sol, seu uso é exclusivamente noturno e deve ser sempre seguido de protetor solar no dia seguinte. Comece com concentrações baixas (0,1–0,3%) e aumente gradualmente para evitar irritação, descamação e vermelhidão — reações esperadas nas primeiras semanas.</p>
+            <p style="margin-top:10px">A regra do "sandwich" — hidratante, retinol, hidratante — reduz a irritação inicial sem comprometer a eficácia.</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="expand-trigger" aria-expanded="false">
+        <div class="expand-trigger__main">
+          <div class="expand-trigger__title">Retinal</div>
+          <div class="expand-trigger__sub">Uma etapa acima do retinol em conversão</div>
+        </div>
+        <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="expand-body">
+        <div class="expand-body__inner">
+          <div class="expand-body__content">
+            <p>O retinaldeído (retinal) é a forma imediatamente anterior ao ácido retinoico na cadeia de conversão da vitamina A. Isso significa que ele precisa de apenas uma etapa de conversão pela pele, enquanto o retinol precisa de duas — tornando-o até 11× mais potente na mesma concentração.</p>
+            <p style="margin-top:10px">Apresenta menos irritação do que o ácido retinoico (prescrição), mas resultados mais rápidos que o retinol convencional. Tem também atividade antibacteriana, tornando-o interessante para peles acneicas. Concentrações comuns: 0,025% a 0,1%.</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="expand-trigger" aria-expanded="false">
+        <div class="expand-trigger__main">
+          <div class="expand-trigger__title">Niacinamida</div>
+          <div class="expand-trigger__sub">Versatilidade em um único ativo</div>
+        </div>
+        <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="expand-body">
+        <div class="expand-body__inner">
+          <div class="expand-body__content">
+            <p>Forma da vitamina B3, a niacinamida é um dos ativos mais bem tolerados e estudados do skincare. Age em múltiplas frentes: reduz a transferência de melanina (manchas), controla a produção de sebo, fortalece a barreira cutânea ao estimular a produção de ceramidas e tem ação anti-inflamatória.</p>
+            <p style="margin-top:10px">Combinações seguras e sinérgicas: com vitamina C (apesar do mito contrário, são compatíveis em formulações modernas), com retinol (reduz irritação), com ácido hialurônico e com protetor solar. Concentrações eficazes: 5% a 10%.</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="expand-trigger" aria-expanded="false">
+        <div class="expand-trigger__main">
+          <div class="expand-trigger__title">Vitamina C Tópica</div>
+          <div class="expand-trigger__sub">Antioxidante e estimulante de colágeno</div>
+        </div>
+        <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="expand-body">
+        <div class="expand-body__inner">
+          <div class="expand-body__content">
+            <p>Aplicada topicamente, a vitamina C (ácido L-ascórbico) neutraliza radicais livres gerados pela exposição ao UV e à poluição, estimula a produção de colágeno e inibe a tirosinase — enzima responsável pela formação de melanina e manchas.</p>
+            <p style="margin-top:10px">Sua maior limitação é a instabilidade: oxida com facilidade ao entrar em contato com luz, calor e ar, perdendo a cor e a eficácia. Por isso, guarde sempre em local fresco e escuro. Formulas em pH ácido (entre 2,5 e 3,5) são mais eficazes, mas também mais irritantes. Derivados mais estáveis como o ascorbil glucosídeo são opções para peles sensíveis.</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="expand-trigger" aria-expanded="false">
+        <div class="expand-trigger__main">
+          <div class="expand-trigger__title">Peptídeos</div>
+          <div class="expand-trigger__sub">Sinalizadores de colágeno</div>
+        </div>
+        <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="expand-body">
+        <div class="expand-body__inner">
+          <div class="expand-body__content">
+            <p>Peptídeos são cadeias curtas de aminoácidos que funcionam como mensageiros celulares. Alguns simulam fragmentos de colágeno degradado, sinalizando para os fibroblastos que há dano e que precisam produzir mais colágeno. Outros inibem neurotransmissores que causam contrações musculares (efeito botox-like).</p>
+            <p style="margin-top:10px">São altamente tolerados, sem contraindicações de uso diário. Combinam bem com quase todos os ativos. Os resultados são graduais e dependem de uso contínuo — diferente do retinol, que tem efeito mais perceptível a curto prazo.</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="expand-trigger" aria-expanded="false">
+        <div class="expand-trigger__main">
+          <div class="expand-trigger__title">Protetor Solar</div>
+          <div class="expand-trigger__sub">O ativo antienvelhecimento mais importante</div>
+        </div>
+        <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="expand-body">
+        <div class="expand-body__inner">
+          <div class="expand-body__content">
+            <p>Cerca de 80% do envelhecimento visível da pele é causado pela exposição solar acumulada ao longo da vida — um fenômeno chamado fotoenvelhecimento. O protetor solar é, portanto, o ativo com maior evidência científica para prevenir manchas, perda de firmeza e rugas.</p>
+            <p style="margin-top:10px">Use FPS 30 no mínimo (FPS 50 é preferível). Reaplicar a cada 2 horas em exposição direta. Filtros de amplo espectro protegem tanto contra UVB (queimaduras) quanto UVA (envelhecimento profundo). O filtro solar não bloqueia a vitamina D de forma significativa na maioria das pessoas.</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="expand-trigger" aria-expanded="false">
+        <div class="expand-trigger__main">
+          <div class="expand-trigger__title">Ácido Hialurônico</div>
+          <div class="expand-trigger__sub">Hidratação de alta performance</div>
+        </div>
+        <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="expand-body">
+        <div class="expand-body__inner">
+          <div class="expand-body__content">
+            <p>Molécula naturalmente presente na derme, capaz de reter até 1.000× seu peso em água. Topicamente, atua como umectante — atrai água do ambiente e das camadas mais profundas para a superfície da pele, melhorando instantaneamente a aparência de linhas de desidratação.</p>
+            <p style="margin-top:10px">Moléculas de alto peso molecular atuam na superfície criando efeito plumping. Moléculas de baixo peso penetram mais fundo. O ideal é usar em pele levemente úmida (logo após lavar o rosto) e selar com um hidratante oclusivo para evitar efeito rebote de ressecamento em ambientes secos.</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /card skincare -->
+  </div>
+
+  <!-- ── SEÇÃO: Nutrição ───────────────────────────────── -->
+  <div class="lib-section" id="lib-nutricao" role="tabpanel">
+    <div class="card" style="background: var(--sage-10); border-color: var(--sage-20); margin-bottom: 16px">
+      <p style="font-size:13.5px; color: var(--ink-light); line-height:1.65">
+        A pele é o reflexo do que acontece por dentro. Os nutrientes certos
+        potencializam os resultados da sua rotina tópica de forma significativa.
+      </p>
+      <a href="nutricao.html" style="display:inline-block; margin-top:14px; font-size:13px; font-weight:600; color:var(--sage-dark)">
+        Ver guia completo de nutrição →
+      </a>
+    </div>
+
+    <div class="card card--flush">
+
+      <button class="expand-trigger" aria-expanded="false">
+        <div class="expand-trigger__main">
+          <div class="expand-trigger__title">Alimentos que inflamam a pele</div>
+          <div class="expand-trigger__sub">O que evitar ou moderar</div>
+        </div>
+        <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="expand-body">
+        <div class="expand-body__inner">
+          <div class="expand-body__content">
+            <p>Açúcar refinado e carboidratos de alto índice glicêmico disparam picos de insulina que aumentam a produção de sebo e estimulam processos inflamatórios, piorando acne e acelerando a glicação das fibras de colágeno. Álcool excessivo desidrata a pele e dilata vasos, causando vermelhidão e opacidade.</p>
+            <p style="margin-top:10px">Laticínios integrais em excesso têm correlação com acne em algumas pessoas, possivelmente pelo teor hormonal do leite. Gorduras trans e óleos vegetais refinados em excesso desequilibram a proporção ômega-6/ômega-3, favorecendo inflamação sistêmica.</p>
+            <div class="chip-list" style="margin-top:12px">
+              <span class="chip">Açúcar refinado</span>
+              <span class="chip">Ultraprocessados</span>
+              <span class="chip">Álcool em excesso</span>
+              <span class="chip">Gorduras trans</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button class="expand-trigger" aria-expanded="false">
+        <div class="expand-trigger__main">
+          <div class="expand-trigger__title">Hidratação e a pele</div>
+          <div class="expand-trigger__sub">A importância da água interna</div>
+        </div>
+        <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="expand-body">
+        <div class="expand-body__inner">
+          <div class="expand-body__content">
+            <p>A desidratação sistêmica reduz o turgor e a elasticidade da pele, acentuando linhas de expressão e deixando a pele com aparência opaca. Embora a hidratação tópica seja essencial, ela não substitui a hidratação interna.</p>
+            <p style="margin-top:10px">A recomendação geral é em torno de 2 litros de água por dia para adultos, ajustada conforme peso, clima e atividade física. Frutas e vegetais com alto teor de água (melancia, pepino, laranja) também contribuem significativamente.</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="expand-trigger" aria-expanded="false">
+        <div class="expand-trigger__main">
+          <div class="expand-trigger__title">Colágeno oral: vale a pena?</div>
+          <div class="expand-trigger__sub">O que a ciência diz sobre suplementação</div>
+        </div>
+        <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="expand-body">
+        <div class="expand-body__inner">
+          <div class="expand-body__content">
+            <p>Evidências emergentes sugerem que peptídeos de colágeno hidrolisado oral podem estimular os fibroblastos a produzirem mais colágeno endógeno — não porque o colágeno ingerido vai direto para a pele, mas porque os peptídeos resultantes da digestão funcionam como sinalizadores. Os estudos mais robustos usam doses de 2,5g a 10g por dia por pelo menos 8 semanas.</p>
+            <p style="margin-top:10px">O efeito é modesto e varia individualmente. Vitamina C é cofator essencial para a síntese de colágeno — suplementar um sem o outro reduz a eficácia. Alimentos ricos em proteínas e vitamina C fornecem os mesmos aminoácidos, sem o custo dos suplementos.</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /card nutricao -->
+  </div>
+
+  <!-- ── SEÇÃO: Sono ───────────────────────────────────── -->
+  <div class="lib-section" id="lib-sono" role="tabpanel">
+    <div class="card card--flush">
+
+      <button class="expand-trigger" aria-expanded="false">
+        <div class="expand-trigger__main">
+          <div class="expand-trigger__title">Sono e produção de colágeno</div>
+          <div class="expand-trigger__sub">Por que a pele se repara à noite</div>
+        </div>
+        <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="expand-body">
+        <div class="expand-body__inner">
+          <div class="expand-body__content">
+            <p>Durante o sono profundo (fase NREM 3), o organismo libera picos de hormônio do crescimento (GH), que estimula a divisão celular, síntese de colágeno e reparo de tecidos danificados. É literalmente o momento em que a pele se reconstrói.</p>
+            <p style="margin-top:10px">O fluxo sanguíneo para a pele aumenta durante o sono, levando mais nutrientes e oxigênio às células. Por isso, produtos noturnos como o retinol aproveitam esse ciclo de renovação para potencializar seus efeitos. Privar-se de sono reduz esse processo de reparo de forma mensurável.</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="expand-trigger" aria-expanded="false">
+        <div class="expand-trigger__main">
+          <div class="expand-trigger__title">Privação de sono e envelhecimento</div>
+          <div class="expand-trigger__sub">O impacto visível de dormir mal</div>
+        </div>
+        <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="expand-body">
+        <div class="expand-body__inner">
+          <div class="expand-body__content">
+            <p>Estudos clínicos mostram que pessoas com privação crônica de sono apresentam pele mais opaca, mais linhas finas, elasticidade reduzida e recuperação mais lenta de danos como queimaduras solares. O cortisol elevado pela falta de sono degrada colágeno e aumenta a inflamação.</p>
+            <p style="margin-top:10px">Uma noite de sono ruim já causa inchaço, olheiras e palidez perceptíveis. Após múltiplas noites de sono insuficiente, a barreira cutânea fica comprometida, aumentando a perda de água transepidérmica e a sensibilidade. Dormir bem é, literalmente, parte da rotina de skincare.</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="expand-trigger" aria-expanded="false">
+        <div class="expand-trigger__main">
+          <div class="expand-trigger__title">Higiene do sono para a pele</div>
+          <div class="expand-trigger__sub">Hábitos que fazem diferença</div>
+        </div>
+        <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="expand-body">
+        <div class="expand-body__inner">
+          <div class="expand-body__content">
+            <p><strong>Fronha de seda ou cetim:</strong> reduz a fricção e a absorção dos produtos noturnos pelo tecido, diminuindo linhas de compressão e irritação. Trocar a fronha 2× por semana reduz a transferência de bactérias e oleosidade para a pele.</p>
+            <p style="margin-top:10px"><strong>Posição ao dormir:</strong> dormir de lado ou de bruços causa compressão mecânica no rosto ao longo de anos, contribuindo para rugas de expressão. Dormir de costas é o ideal para a pele do rosto.</p>
+            <p style="margin-top:10px"><strong>Ambiente:</strong> umidificador no quarto nos meses secos reduz a perda de água transepidérmica durante o sono. Temperatura entre 18–20°C favorece o sono profundo e, consequentemente, o reparo celular.</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="expand-trigger" aria-expanded="false">
+        <div class="expand-trigger__main">
+          <div class="expand-trigger__title">Melatonina e proteção cutânea</div>
+          <div class="expand-trigger__sub">O hormônio do sono como antioxidante</div>
+        </div>
+        <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="expand-body">
+        <div class="expand-body__inner">
+          <div class="expand-body__content">
+            <p>A melatonina, produzida pela glândula pineal no escuro, é também um dos antioxidantes mais potentes do organismo. Pesquisas mostram que a pele produz e responde à melatonina localmente, usando-a para se defender do estresse oxidativo acumulado durante o dia.</p>
+            <p style="margin-top:10px">A exposição à luz azul de telas à noite suprime a produção de melatonina. Reduzir o uso de dispositivos 1 hora antes de dormir — ou usar modo noturno — preserva esse ciclo e favorece tanto a qualidade do sono quanto a capacidade antioxidante noturna da pele.</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /card sono -->
+  </div>
+
+  <!-- ── SEÇÃO: Hábitos ────────────────────────────────── -->
+  <div class="lib-section" id="lib-habitos" role="tabpanel">
+    <div class="card card--flush">
+
+      <button class="expand-trigger" aria-expanded="false">
+        <div class="expand-trigger__main">
+          <div class="expand-trigger__title">Protetor solar todos os dias</div>
+          <div class="expand-trigger__sub">O hábito mais impactante do skincare</div>
+        </div>
+        <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="expand-body">
+        <div class="expand-body__inner">
+          <div class="expand-body__content">
+            <p>A radiação UVA penetra vidros, nuvens e provoca danos cumulativos que se acumulam ao longo de décadas. Usar protetor solar apenas em dias ensolarados ou na praia é insuficiente. A proteção diária — mesmo em dias nublados ou dentro de ambientes com janelas — é o único comportamento com eficácia comprovada para prevenir fotoenvelhecimento.</p>
+            <p style="margin-top:10px">A quantidade correta para o rosto é de 1/4 de colher de chá (aproximadamente 1,2 ml). Menos que isso reduz significativamente o FPS real obtido. Reaplicar a cada 2 horas em exposição direta é essencial — o filtro se degrada com luz e suor.</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="expand-trigger" aria-expanded="false">
+        <div class="expand-trigger__main">
+          <div class="expand-trigger__title">Não toque o rosto</div>
+          <div class="expand-trigger__sub">Um hábito silencioso que prejudica a pele</div>
+        </div>
+        <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="expand-body">
+        <div class="expand-body__inner">
+          <div class="expand-body__content">
+            <p>As mãos transportam bactérias, oleosidade e resíduos que, ao entrarem em contato com o rosto, podem obstruir poros, irritar a pele e piorar a acne. Estudos estimam que tocamos inconscientemente o rosto entre 15 e 23 vezes por hora.</p>
+            <p style="margin-top:10px">Espremer espinhas é um dos hábitos mais prejudiciais: força bactérias para camadas mais profundas, causa inflamação local, prolonga a cicatrização e aumenta o risco de manchas pós-inflamatórias permanentes. Deixar que lesões de acne cicatrizem naturalmente ou com tratamentos tópicos específicos é sempre preferível.</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="expand-trigger" aria-expanded="false">
+        <div class="expand-trigger__main">
+          <div class="expand-trigger__title">Estresse e cortisol</div>
+          <div class="expand-trigger__sub">Como a mente afeta a pele</div>
+        </div>
+        <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="expand-body">
+        <div class="expand-body__inner">
+          <div class="expand-body__content">
+            <p>O estresse crônico eleva os níveis de cortisol, que por sua vez: aumenta a produção de sebo (agravando acne), degrada fibras de colágeno, enfraquece a barreira cutânea e piora condições inflamatórias como dermatite, psoríase e rosácea. A conexão pele-intestino-cérebro é bidireccional — o estado mental impacta diretamente a saúde da pele.</p>
+            <p style="margin-top:10px">Práticas de regulação do estresse — meditação, exercício físico regular, respiração consciente — têm impacto mensurável na pele. Não é marketing: é fisiologia.</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="expand-trigger" aria-expanded="false">
+        <div class="expand-trigger__main">
+          <div class="expand-trigger__title">Fumo e a pele</div>
+          <div class="expand-trigger__sub">O envelhecimento acelerado pelo cigarro</div>
+        </div>
+        <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="expand-body">
+        <div class="expand-body__inner">
+          <div class="expand-body__content">
+            <p>O tabaco introduz mais de 4.000 compostos tóxicos no organismo, reduz a oxigenação da pele por vasoconstrição, degrada colágeno e elastina, e gera radicais livres em quantidade que supera qualquer antioxidante tópico. O "rosto do fumante" é um fenômeno clínico reconhecido: pele amarelada, poros dilatados, linhas ao redor dos lábios e perda de elasticidade precoce.</p>
+            <p style="margin-top:10px">Nenhuma rotina de skincare, por mais completa que seja, consegue compensar totalmente o dano causado pelo fumo contínuo. Parar de fumar é a mudança de hábito com maior impacto positivo documentado na aparência da pele.</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="expand-trigger" aria-expanded="false">
+        <div class="expand-trigger__main">
+          <div class="expand-trigger__title">Exercício físico</div>
+          <div class="expand-trigger__sub">Circulação, oxigenação e renovação</div>
+        </div>
+        <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="expand-body">
+        <div class="expand-body__inner">
+          <div class="expand-body__content">
+            <p>O exercício aeróbico aumenta o fluxo sanguíneo para a pele, melhorando a entrega de nutrientes e oxigênio e acelerando a remoção de resíduos metabólicos. Estudos mostram que pessoas fisicamente ativas apresentam estruturas dérmicas mais jovens do que sedentários da mesma idade.</p>
+            <p style="margin-top:10px">Atenção à limpeza pós-treino: suor associado à oleosidade pode obstruir poros. Lavar o rosto logo após o exercício é parte da rotina. Proteger a pele do sol durante atividades ao ar livre é ainda mais importante, pois o esforço físico acelera a absorção de compostos fotoativos.</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /card habitos -->
+  </div>
+
+  <!-- ── SEÇÃO: Envelhecimento ─────────────────────────── -->
+  <div class="lib-section" id="lib-envelhecimento" role="tabpanel">
+    <div class="card card--flush">
+
+      <button class="expand-trigger" aria-expanded="false">
+        <div class="expand-trigger__main">
+          <div class="expand-trigger__title">Colágeno e Elastina</div>
+          <div class="expand-trigger__sub">A arquitetura da pele jovem</div>
+        </div>
+        <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="expand-body">
+        <div class="expand-body__inner">
+          <div class="expand-body__content">
+            <p>O colágeno (principalmente tipo I e III) compõe cerca de 75% da derme e dá sustentação e firmeza à pele. A elastina fornece a propriedade de retornar à forma original após se esticar. Juntos, formam a "trama" que mantém a pele plena e elástica.</p>
+            <p style="margin-top:10px">A partir dos 25 anos, a produção de colágeno cai cerca de 1% ao ano. Aos 40, a perda acumulada já é perceptível em firmeza e textura. O fotoenvelhecimento acelera esse processo dramaticamente — raios UV ativam enzimas (metaloproteinases) que degradam o colágeno existente enquanto inibem a produção de novo.</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="expand-trigger" aria-expanded="false">
+        <div class="expand-trigger__main">
+          <div class="expand-trigger__title">Radicais Livres</div>
+          <div class="expand-trigger__sub">A oxidação que envelhece as células</div>
+        </div>
+        <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="expand-body">
+        <div class="expand-body__inner">
+          <div class="expand-body__content">
+            <p>Radicais livres são moléculas instáveis com elétrons desemparelhados que "roubam" elétrons de moléculas vizinhas, causando uma reação em cadeia de dano oxidativo. Na pele, danificam membranas celulares, DNA e fibras de colágeno e elastina.</p>
+            <p style="margin-top:10px">As principais fontes de radicais livres para a pele são: radiação UV, poluição atmosférica, fumo, alimentação pobre em antioxidantes e estresse crônico. Antioxidantes tópicos (vitamina C, vitamina E, niacinamida, resveratrol) e alimentares neutralizam esses radicais antes que causem dano. A combinação de proteção interna e externa é sempre superior a qualquer uma isolada.</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="expand-trigger" aria-expanded="false">
+        <div class="expand-trigger__main">
+          <div class="expand-trigger__title">Glicação</div>
+          <div class="expand-trigger__sub">Como o açúcar endurece a pele</div>
+        </div>
+        <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="expand-body">
+        <div class="expand-body__inner">
+          <div class="expand-body__content">
+            <p>A glicação é o processo pelo qual moléculas de açúcar em excesso no sangue se ligam de forma não enzimática a proteínas — incluindo colágeno e elastina — formando produtos finais de glicação avançada (AGEs). Esses "entrelaçamentos" tornam as fibras rígidas e quebradiças, reduzindo a elasticidade e aumentando o aspecto envelhecido da pele.</p>
+            <p style="margin-top:10px">Ao contrário dos danos solares, a glicação não é visível a curto prazo — seus efeitos se acumulam silenciosamente ao longo de décadas. A melhor forma de combatê-la é manter o consumo de açúcar refinado moderado e priorizar alimentos de baixo índice glicêmico, mantendo picos de insulina sob controle.</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="expand-trigger" aria-expanded="false">
+        <div class="expand-trigger__main">
+          <div class="expand-trigger__title">Fotoenvelhecimento vs. Cronológico</div>
+          <div class="expand-trigger__sub">O que podemos e não podemos controlar</div>
+        </div>
+        <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="expand-body">
+        <div class="expand-body__inner">
+          <div class="expand-body__content">
+            <p>O envelhecimento cronológico (intrínseco) é geneticamente programado e inevitável: perda gradual de colágeno, redução de gordura subcutânea, diminuição da renovação celular. O fotoenvelhecimento (extrínseco) é causado principalmente pela exposição UV acumulada e representa cerca de 80% do envelhecimento visível.</p>
+            <p style="margin-top:10px">A boa notícia: o fotoenvelhecimento é amplamente prevenível. Comparar a pele em áreas expostas ao sol (rosto, mãos, pescoço) com áreas protegidas (nádegas, parte interna do braço) da mesma pessoa revela visivelmente a diferença que a exposição solar faz ao longo da vida. Proteção solar consistente desde cedo é o maior investimento em longevidade da pele.</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="expand-trigger" aria-expanded="false">
+        <div class="expand-trigger__main">
+          <div class="expand-trigger__title">O papel da barreira cutânea</div>
+          <div class="expand-trigger__sub">A primeira linha de defesa da pele</div>
+        </div>
+        <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="expand-body">
+        <div class="expand-body__inner">
+          <div class="expand-body__content">
+            <p>A barreira cutânea — formada por células mortas (corneócitos) unidas por ceramidas, colesterol e ácidos graxos — é a principal defesa da pele contra agentes externos e a principal responsável por manter a hidratação. Com o envelhecimento, a produção de ceramidas diminui e a barreira fica mais permeável.</p>
+            <p style="margin-top:10px">Sinais de barreira comprometida: sensibilidade aumentada, vermelhidão, descamação, sensação de ardência ao aplicar produtos e ressecamento persistente. Restaurar a barreira exige reduzir ativos agressivos temporariamente e priorizar ingredientes como ceramidas, ácidos graxos, niacinamida e glicerina. Excesso de esfoliação é uma das causas mais comuns de comprometimento da barreira.</p>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /card envelhecimento -->
+  </div>
+
 </main>
 
-<nav class="bottom-nav">
-  <a href="../index.html" data-nav="index">
-    <svg viewBox="0 0 24 24"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9h12v-9"/></svg>
-    Início
+<!-- Bottom Nav -->
+<nav class="bottom-nav" aria-label="Navegação principal">
+  <a href="../index.html" data-nav="dashboard">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+    <span>Início</span>
   </a>
   <a href="produtos.html" data-nav="produtos">
-    <svg viewBox="0 0 24 24"><path d="M9 3h6v3.2c0 .5.2 1 .6 1.3l2 1.9c.5.4.8 1.1.8 1.8V19a2 2 0 0 1-2 2H8.6a2 2 0 0 1-2-2V11.2c0-.7.3-1.4.8-1.8l2-1.9c.4-.4.6-.8.6-1.3V3Z"/><path d="M8 14h8"/></svg>
-    Produtos
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/>
+      <line x1="7" y1="7" x2="7.01" y2="7"/>
+    </svg>
+    <span>Produtos</span>
   </a>
-  <a href="nutricao.html" data-nav="nutricao">
-    <svg viewBox="0 0 24 24"><path d="M12 21c-4.5-1-8-5-8-9.5C4 7 6.5 4 9.5 4c1.2 0 2 .5 2.5 1 .5-.5 1.3-1 2.5-1 3 0 5.5 3 5.5 7.5 0 4.5-3.5 8.5-8 9.5Z"/></svg>
-    Nutrição
+  <a href="diario.html" data-nav="diario">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+      <polyline points="14 2 14 8 20 8"/>
+      <line x1="16" y1="13" x2="8" y2="13"/>
+      <line x1="16" y1="17" x2="8" y2="17"/>
+    </svg>
+    <span>Diário</span>
   </a>
   <a href="biblioteca.html" data-nav="biblioteca">
-    <svg viewBox="0 0 24 24"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5Z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5Z"/></svg>
-    Biblioteca
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
+      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
+    </svg>
+    <span>Biblioteca</span>
   </a>
   <a href="perfil.html" data-nav="perfil">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c1.2-3.5 4-5.2 7-5.2s5.8 1.7 7 5.2"/></svg>
-    Perfil
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+      <circle cx="12" cy="7" r="4"/>
+    </svg>
+    <span>Perfil</span>
   </a>
 </nav>
 

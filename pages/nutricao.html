@@ -1,19 +1,16 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Nutrição — MagaBeauty</title>
-<meta name="theme-color" content="#A8C3B0">
-<link rel="manifest" href="../manifest.json">
-<link rel="icon" href="../assets/icon-192.png">
-<link rel="apple-touch-icon" href="../assets/icon-192.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="MagaBeauty">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="../css/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Nutrição para a Pele — MagaBeauty</title>
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#A8C3B0">
+  <link rel="apple-touch-icon" href="../assets/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body data-page="nutricao" data-base="../">
 
@@ -27,36 +24,282 @@
   </div>
 </header>
 
-<div class="mb-page-title">
-  <div class="mb-eyebrow">De dentro para fora</div>
-  <h1>Nutrição para a pele</h1>
-  <p>Os nutrientes que potencializam os resultados da sua rotina.</p>
-</div>
-
 <main>
-  <div id="nutricao-list"></div>
+  <div class="page-header">
+    <div class="page-header__eyebrow">De dentro para fora</div>
+    <h1 class="page-header__title">Nutrição para a pele</h1>
+    <p class="page-header__sub">
+      Os nutrientes certos potencializam os resultados da sua rotina tópica.
+      Toque em cada categoria para ver os alimentos e benefícios.
+    </p>
+  </div>
+
+  <!-- Vitamina C -->
+  <div class="card card--flush">
+
+    <button class="expand-trigger" aria-expanded="false">
+      <div class="expand-trigger__main">
+        <div class="expand-trigger__title">Vitamina C</div>
+        <div class="expand-trigger__sub">Acerola, Kiwi, Goiaba…</div>
+      </div>
+      <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </button>
+    <div class="expand-body">
+      <div class="expand-body__inner">
+        <div class="expand-body__content" style="padding: 12px 20px 20px">
+          <p>
+            Essencial para a síntese de colágeno, a vitamina C age como antioxidante,
+            protegendo as células contra o estresse oxidativo causado por UV e poluição.
+            Também contribui para uniformizar o tom, reduzir manchas e aumentar a
+            firmeza da pele ao estimular os fibroblastos.
+          </p>
+          <div class="chip-list" style="margin-top: 14px">
+            <span class="chip">Acerola</span>
+            <span class="chip">Kiwi</span>
+            <span class="chip">Goiaba</span>
+            <span class="chip">Laranja</span>
+            <span class="chip">Pimentão vermelho</span>
+            <span class="chip">Morango</span>
+            <span class="chip">Brócolis</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="expand-trigger" aria-expanded="false">
+      <div class="expand-trigger__main">
+        <div class="expand-trigger__title">Licopeno</div>
+        <div class="expand-trigger__sub">Tomate, Melancia…</div>
+      </div>
+      <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </button>
+    <div class="expand-body">
+      <div class="expand-body__inner">
+        <div class="expand-body__content" style="padding: 12px 20px 20px">
+          <p>
+            Carotenóide com potente ação antioxidante e fotoprotetora interna. Estudos
+            indicam que o consumo regular de licopeno reduz o dano causado pela radiação
+            ultravioleta, complementando (mas não substituindo) o protetor solar.
+            A biodisponibilidade é maior quando o alimento é aquecido com azeite.
+          </p>
+          <div class="chip-list" style="margin-top: 14px">
+            <span class="chip">Tomate cozido</span>
+            <span class="chip">Melancia</span>
+            <span class="chip">Goiaba vermelha</span>
+            <span class="chip">Pimentão vermelho</span>
+            <span class="chip">Extrato de tomate</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="expand-trigger" aria-expanded="false">
+      <div class="expand-trigger__main">
+        <div class="expand-trigger__title">Ômega 3</div>
+        <div class="expand-trigger__sub">Sardinha, Salmão, Chia…</div>
+      </div>
+      <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </button>
+    <div class="expand-body">
+      <div class="expand-body__inner">
+        <div class="expand-body__content" style="padding: 12px 20px 20px">
+          <p>
+            Ácidos graxos essenciais que mantêm a barreira cutânea íntegra, retêm
+            umidade e reduzem processos inflamatórios — incluindo acne e vermelhidão.
+            O EPA e DHA (presentes em peixes) têm ação mais direta sobre a pele do que
+            o ALA vegetal (chia, linhaça), que precisa ser convertido pelo organismo.
+          </p>
+          <div class="chip-list" style="margin-top: 14px">
+            <span class="chip">Sardinha</span>
+            <span class="chip">Salmão</span>
+            <span class="chip">Atum</span>
+            <span class="chip">Chia</span>
+            <span class="chip">Linhaça</span>
+            <span class="chip">Nozes</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="expand-trigger" aria-expanded="false">
+      <div class="expand-trigger__main">
+        <div class="expand-trigger__title">Polifenóis</div>
+        <div class="expand-trigger__sub">Uva roxa, Chá verde, Mirtilo…</div>
+      </div>
+      <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </button>
+    <div class="expand-body">
+      <div class="expand-body__inner">
+        <div class="expand-body__content" style="padding: 12px 20px 20px">
+          <p>
+            Compostos vegetais com ação antioxidante e anti-inflamatória. As
+            proantocianidinas da uva e do mirtilo protegem as fibras de colágeno e
+            elastina da degradação. Os catequinas do chá verde inibem enzimas que
+            aceleram o envelhecimento. O resveratrol ativa genes associados à
+            longevidade celular.
+          </p>
+          <div class="chip-list" style="margin-top: 14px">
+            <span class="chip">Uva roxa</span>
+            <span class="chip">Mirtilo</span>
+            <span class="chip">Chá verde</span>
+            <span class="chip">Romã</span>
+            <span class="chip">Cacau 70%+</span>
+            <span class="chip">Vinho tinto (moderado)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="expand-trigger" aria-expanded="false">
+      <div class="expand-trigger__main">
+        <div class="expand-trigger__title">Proteínas</div>
+        <div class="expand-trigger__sub">Ovos, Peixes, Leguminosas…</div>
+      </div>
+      <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </button>
+    <div class="expand-body">
+      <div class="expand-body__inner">
+        <div class="expand-body__content" style="padding: 12px 20px 20px">
+          <p>
+            Colágeno, elastina e queratina são proteínas estruturais que formam a
+            arquitetura da pele. A ingestão adequada de aminoácidos essenciais —
+            especialmente glicina, prolina e lisina — fornece os blocos de construção
+            necessários para que os fibroblastos produzam colágeno novo, processo
+            potencializado pela vitamina C.
+          </p>
+          <div class="chip-list" style="margin-top: 14px">
+            <span class="chip">Ovos</span>
+            <span class="chip">Frango</span>
+            <span class="chip">Peixe</span>
+            <span class="chip">Feijão</span>
+            <span class="chip">Lentilha</span>
+            <span class="chip">Quinoa</span>
+            <span class="chip">Tofu</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="expand-trigger" aria-expanded="false">
+      <div class="expand-trigger__main">
+        <div class="expand-trigger__title">Zinco</div>
+        <div class="expand-trigger__sub">Frutos do mar, Sementes de abóbora…</div>
+      </div>
+      <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </button>
+    <div class="expand-body">
+      <div class="expand-body__inner">
+        <div class="expand-body__content" style="padding: 12px 20px 20px">
+          <p>
+            Mineral essencial para a cicatrização, controle da oleosidade e regulação
+            das glândulas sebáceas. Sua deficiência está associada a acne e atraso na
+            regeneração da pele. Também protege contra danos oxidativos por fazer parte
+            da superóxido dismutase, uma das principais enzimas antioxidantes do corpo.
+          </p>
+          <div class="chip-list" style="margin-top: 14px">
+            <span class="chip">Ostra</span>
+            <span class="chip">Caranguejo</span>
+            <span class="chip">Semente de abóbora</span>
+            <span class="chip">Carne vermelha magra</span>
+            <span class="chip">Castanha de caju</span>
+            <span class="chip">Grão-de-bico</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="expand-trigger" aria-expanded="false" style="border-bottom: none">
+      <div class="expand-trigger__main">
+        <div class="expand-trigger__title">Vitamina E</div>
+        <div class="expand-trigger__sub">Castanha-do-pará, Amêndoas, Abacate…</div>
+      </div>
+      <svg class="expand-trigger__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="6 9 12 15 18 9"/>
+      </svg>
+    </button>
+    <div class="expand-body">
+      <div class="expand-body__inner">
+        <div class="expand-body__content" style="padding: 12px 20px 20px; border-bottom: none">
+          <p>
+            Antioxidante lipossolúvel que protege as membranas celulares da pele contra
+            a peroxidação lipídica causada por radicais livres. Age em sinergia com a
+            vitamina C — enquanto a E protege as estruturas gordurosas, a C protege os
+            meios aquosos. A castanha-do-pará também é rica em selênio, que amplifica
+            essa proteção.
+          </p>
+          <div class="chip-list" style="margin-top: 14px">
+            <span class="chip">Castanha-do-pará</span>
+            <span class="chip">Amêndoas</span>
+            <span class="chip">Abacate</span>
+            <span class="chip">Azeite de oliva extravirgem</span>
+            <span class="chip">Espinafre</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /card -->
+
+  <div class="card" style="background: var(--sage-10); border-color: var(--sage-20)">
+    <p style="font-size: 13px; color: var(--ink-light); line-height: 1.65">
+      <strong style="color: var(--ink)">Lembre-se:</strong> nenhum suplemento ou alimento isolado substitui
+      uma alimentação equilibrada. O impacto da nutrição na pele é cumulativo e aparece
+      com consistência ao longo de semanas e meses.
+    </p>
+  </div>
+
 </main>
 
-<nav class="bottom-nav">
-  <a href="../index.html" data-nav="index">
-    <svg viewBox="0 0 24 24"><path d="M4 11.5 12 4l8 7.5"/><path d="M6 10v9h12v-9"/></svg>
-    Início
+<!-- Bottom Nav -->
+<nav class="bottom-nav" aria-label="Navegação principal">
+  <a href="../index.html" data-nav="dashboard">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+    <span>Início</span>
   </a>
   <a href="produtos.html" data-nav="produtos">
-    <svg viewBox="0 0 24 24"><path d="M9 3h6v3.2c0 .5.2 1 .6 1.3l2 1.9c.5.4.8 1.1.8 1.8V19a2 2 0 0 1-2 2H8.6a2 2 0 0 1-2-2V11.2c0-.7.3-1.4.8-1.8l2-1.9c.4-.4.6-.8.6-1.3V3Z"/><path d="M8 14h8"/></svg>
-    Produtos
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/>
+      <line x1="7" y1="7" x2="7.01" y2="7"/>
+    </svg>
+    <span>Produtos</span>
   </a>
-  <a href="nutricao.html" data-nav="nutricao">
-    <svg viewBox="0 0 24 24"><path d="M12 21c-4.5-1-8-5-8-9.5C4 7 6.5 4 9.5 4c1.2 0 2 .5 2.5 1 .5-.5 1.3-1 2.5-1 3 0 5.5 3 5.5 7.5 0 4.5-3.5 8.5-8 9.5Z"/></svg>
-    Nutrição
+  <a href="diario.html" data-nav="diario">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+      <polyline points="14 2 14 8 20 8"/>
+      <line x1="16" y1="13" x2="8" y2="13"/>
+      <line x1="16" y1="17" x2="8" y2="17"/>
+    </svg>
+    <span>Diário</span>
   </a>
   <a href="biblioteca.html" data-nav="biblioteca">
-    <svg viewBox="0 0 24 24"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v16H5.5A1.5 1.5 0 0 1 4 18.5Z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v16h5.5a1.5 1.5 0 0 0 1.5-1.5Z"/></svg>
-    Biblioteca
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
+      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
+    </svg>
+    <span>Biblioteca</span>
   </a>
   <a href="perfil.html" data-nav="perfil">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c1.2-3.5 4-5.2 7-5.2s5.8 1.7 7 5.2"/></svg>
-    Perfil
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+      <circle cx="12" cy="7" r="4"/>
+    </svg>
+    <span>Perfil</span>
   </a>
 </nav>
 

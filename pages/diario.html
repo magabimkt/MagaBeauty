@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Diário da Pele — MagaBeauty</title>
+  <link rel="manifest" href="../manifest.json">
+  <meta name="theme-color" content="#A8C3B0">
+  <link rel="apple-touch-icon" href="../assets/icon-192.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body data-page="diario" data-base="../">
+
+<header class="mb-header">
+  <div class="mb-header__brand">
+    <img src="../assets/logo.svg" alt="" class="mb-header__logo">
+    <div>
+      <div class="mb-header__title">MagaBeauty</div>
+      <div class="mb-header__subtitle">Pele saudável &amp; radiante</div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="page-header">
+    <div class="page-header__eyebrow">Acompanhamento</div>
+    <h1 class="page-header__title">Diário da Pele</h1>
+    <p class="page-header__sub">
+      Registre como sua pele está a cada dia. Com o tempo, os padrões
+      revelam o que funciona ou não na sua rotina.
+    </p>
+  </div>
+
+  <!-- Lista de entradas (renderizada pelo JS) -->
+  <div id="diaryList" class="diary-list"></div>
+
+  <!-- Estado vazio -->
+  <div id="diaryEmpty" class="empty-state" hidden>
+    <div class="empty-state__icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+        <line x1="16" y1="13" x2="8" y2="13"/>
+        <line x1="16" y1="17" x2="8" y2="17"/>
+      </svg>
+    </div>
+    <div class="empty-state__title">Nenhum registro ainda</div>
+    <p class="empty-state__sub">
+      Toque no botão <strong>+</strong> para registrar<br>
+      como sua pele está hoje.
+    </p>
+  </div>
+</main>
+
+<!-- Botão flutuante: novo registro -->
+<button class="btn btn--fab" id="fabAdd" aria-label="Adicionar registro no diário">+</button>
+
+<!-- ── Modal: novo / editar registro ────────────────────── -->
+<div class="modal-backdrop" id="diaryModal" role="dialog" aria-modal="true" aria-labelledby="diaryModalTitle">
+  <div class="modal-box">
+    <div class="modal-handle" aria-hidden="true"></div>
+    <h2 class="modal-title" id="diaryModalTitle">Novo registro</h2>
+
+    <div id="diaryForm">
+
+      <!-- Data -->
+      <div class="form-group">
+        <label class="form-label" for="field-date">Data</label>
+        <input
+          class="form-input"
+          type="date"
+          id="field-date"
+          name="date"
+          required
+        >
+      </div>
+
+      <!-- Sensibilidade -->
+      <div class="form-group">
+        <div class="rating-field">
+          <div class="rating-field__label">
+            <span class="rating-field__name">Sensibilidade</span>
+            <span class="rating-field__val" id="val-sensibilidade">1</span>
+          </div>
+          <input
+            type="range"
+            id="field-sensibilidade"
+            name="sensibilidade"
+            min="1"
+            max="5"
+            value="1"
+            step="1"
+            aria-label="Sensibilidade de 1 a 5"
+          >
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--ink-xlight);margin-top:3px">
+            <span>Nenhuma</span>
+            <span>Extrema</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hidratação -->
+      <div class="form-group">
+        <div class="rating-field">
+          <div class="rating-field__label">
+            <span class="rating-field__name">Hidratação</span>
+            <span class="rating-field__val" id="val-hidratacao">1</span>
+          </div>
+          <input
+            type="range"
+            id="field-hidratacao"
+            name="hidratacao"
+            min="1"
+            max="5"
+            value="1"
+            step="1"
+            aria-label="Hidratação de 1 a 5"
+          >
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--ink-xlight);margin-top:3px">
+            <span>Muito seca</span>
+            <span>Muito hidratada</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Acne -->
+      <div class="form-group">
+        <div class="rating-field">
+          <div class="rating-field__label">
+            <span class="rating-field__name">Acne</span>
+            <span class="rating-field__val" id="val-acne">1</span>
+          </div>
+          <input
+            type="range"
+            id="field-acne"
+            name="acne"
+            min="1"
+            max="5"
+            value="1"
+            step="1"
+            aria-label="Acne de 1 a 5"
+          >
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--ink-xlight);margin-top:3px">
+            <span>Nenhuma</span>
+            <span>Muita</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Manchas -->
+      <div class="form-group">
+        <div class="rating-field">
+          <div class="rating-field__label">
+            <span class="rating-field__name">Manchas</span>
+            <span class="rating-field__val" id="val-manchas">1</span>
+          </div>
+          <input
+            type="range"
+            id="field-manchas"
+            name="manchas"
+            min="1"
+            max="5"
+            value="1"
+            step="1"
+            aria-label="Manchas de 1 a 5"
+          >
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--ink-xlight);margin-top:3px">
+            <span>Nenhuma</span>
+            <span>Muitas</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Observações -->
+      <div class="form-group">
+        <label class="form-label form-label--optional" for="field-observacoes">Observações</label>
+        <textarea
+          class="form-textarea"
+          id="field-observacoes"
+          name="observacoes"
+          placeholder="Como sua pele está hoje? Algo diferente na rotina? Reação a algum produto?"
+          rows="4"
+        ></textarea>
+      </div>
+
+    </div><!-- /diaryForm -->
+
+    <div class="modal-actions">
+      <button class="btn btn--primary btn--block" id="diarySave">Salvar registro</button>
+      <button class="btn btn--ghost btn--block" id="diaryCancel">Cancelar</button>
+    </div>
+
+    <!-- Botão fechar (acessibilidade) -->
+    <button
+      class="visually-hidden"
+      id="diaryModalClose"
+      aria-label="Fechar modal"
+    >Fechar</button>
+
+  </div>
+</div>
+
+<!-- ── Diálogo: confirmar exclusão ───────────────────────── -->
+<div class="confirm-backdrop" id="confirmDelete" role="alertdialog" aria-modal="true" aria-labelledby="confirmDeleteTitle">
+  <div class="confirm-box">
+    <div class="confirm-box__title" id="confirmDeleteTitle">Excluir registro</div>
+    <p class="confirm-box__msg" id="confirmDeleteMsg">
+      Tem certeza que deseja excluir este registro?
+    </p>
+    <div class="confirm-box__actions">
+      <button class="btn btn--ghost" id="confirmDeleteCancel">Cancelar</button>
+      <button class="btn btn--danger" id="confirmDeleteOk">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<!-- Bottom Nav -->
+<nav class="bottom-nav" aria-label="Navegação principal">
+  <a href="../index.html" data-nav="dashboard">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+      <polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+    <span>Início</span>
+  </a>
+  <a href="produtos.html" data-nav="produtos">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/>
+      <line x1="7" y1="7" x2="7.01" y2="7"/>
+    </svg>
+    <span>Produtos</span>
+  </a>
+  <a href="diario.html" data-nav="diario">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+      <polyline points="14 2 14 8 20 8"/>
+      <line x1="16" y1="13" x2="8" y2="13"/>
+      <line x1="16" y1="17" x2="8" y2="17"/>
+    </svg>
+    <span>Diário</span>
+  </a>
+  <a href="biblioteca.html" data-nav="biblioteca">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/>
+      <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
+    </svg>
+    <span>Biblioteca</span>
+  </a>
+  <a href="perfil.html" data-nav="perfil">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+      <circle cx="12" cy="7" r="4"/>
+    </svg>
+    <span>Perfil</span>
+  </a>
+</nav>
+
+<script src="../js/app.js"></script>
+</body>
+</html>
